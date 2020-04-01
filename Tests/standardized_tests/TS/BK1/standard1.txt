@@ -1,1 +1,0 @@
-{"delta": 0.01, "max_iter": 500, "tabu_list_max_length": 20, "M": 100, "max loops": 15, "min progress": 0.001, "weights": [0.5, 0.5], "init_sol": [-2, 6], "description": "No description."}

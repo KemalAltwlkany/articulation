@@ -4,9 +4,8 @@ import getopt as getopt
 
 # working with files
 import os as os
-import json as json
 import copy as copy
-from datetime import datetime
+import json as json
 
 # packages needed for the algorithm
 import numpy as np
@@ -25,8 +24,8 @@ from LocalSearch.LS_apriori import LocalSearchApriori
 
 fig_num = 1
 
-def save_test_to_file_vol3(init_sol, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, final_sol,
-                           seed_val, termination_reason, last_iter, file_name):
+def save_test_to_file_vol(init_sol, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, final_sol,
+                          seed_val, termination_reason, last_iter, file_name):
     f = open(file_name + ".txt", "w")
     # fpdf library ignores \t and \n's, so we embedded indentation by adding it manually
     wh = "        "  # an eight-character width whitespace (2xtab)
@@ -68,118 +67,37 @@ def save_test_to_file_vol3(init_sol, delta, max_iter, M, tabu_list_max_length, w
     f.close()
 
 
-def save_test_to_file_vol2(init_sol, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, final_sol,
-                           seed_val, termination_reason, last_iter, file_name):
-    f = open(file_name + ".txt", "w")
-    f.write(str(len(init_sol.y)) + "\n")   # embedded the dimensions of the search and fitness space in the file
-    f.write(str(len(init_sol.x)) + "\n")
-    f.write('-----------------Algorithm parameters-----------------'  + "\n")
-    f.write('Delta = ' + str(delta) + "\n")
-    f.write('Max iterations = ' + str(max_iter) + "\n")
-    f.write('M (criteria punishment) = ' + str(M) + "\n")
-    f.write('Seed = ' + str(seed_val) + "\n")
-    f.write('Max loops = ' + str(max_loops) + "\n")
-    f.write('Min progress = ' + str(min_progress) + "\n")
-    f.write('Tabu list max length = ' + str(tabu_list_max_length) + "\n")
-    f.write('Weights = {' + "\n")
-    for ind, wi in enumerate(weights):
-        f.write('w' + str(ind + 1) + " = " + str(wi) + "\n")
-    f.write("}\n")
-    f.write("-----------------Performance-----------------\n")
-    f.write('Termination reason: ' + str(termination_reason) + "\n")
-    f.write("Last iteration = " + str(last_iter) + "\n")
-    f.write("-----------\n")
-    f.write('Initial solution:' + "\n")
-    f.write('x = { ' + "\n")
-    for ind, xi in enumerate(init_sol.x):
-        f.write('x' + str(ind + 1) + " = " + str(xi) + "\n")
-    f.write('}\n')
-    f.write('f = {\n')
-    for ind, fi in enumerate(init_sol.y):
-        f.write('f' + str(ind + 1) + " = " + str(fi) + "\n")
-    f.write('}\n')
-    f.write("-----------\n")
-    f.write('Final solution:\n')
-    f.write('x = {\n')
-    for ind, xi in enumerate(final_sol.x):
-        f.write('x' + str(ind + 1) + " = " + str(xi) + "\n")
-    f.write('}\n')
-    f.write('f = {\n')
-    for ind, fi in enumerate(final_sol.y):
-        f.write('f' + str(ind + 1) + " = " + str(fi) + "\n")
-    f.write('}')
-    f.close()
-
-def save_test_to_file(init_sol, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, final_sol,
-                      seed_val, termination_reason, last_iter, file_name):
-    data = {}
-    # Create initial solution in json
-    # Create x-vector in json
-    data['Initial solution'] = {}
-    data['Initial solution']['x'] = {}
-    for ind, xi in enumerate(init_sol.x):
-        s = 'x' + str(ind + 1)
-        data['Initial solution']['x'][s] = xi
-
-    # Create f-vector in json
-    data['Initial solution']['f'] = {}
-    for ind, fi in enumerate(init_sol.y):
-        s = 'f' + str(ind + 1)
-        data['Initial solution']['f'][s] = fi
-
-    # Create other information
-    data['delta'] = delta
-    data['max iterations'] = max_iter
-    data['M (criteria punishment)'] = M
-    data['Seed'] = seed_val
-    data['Termination reason'] = termination_reason
-    data['Last iter'] = last_iter
-    data['TabuList max length'] = tabu_list_max_length
-    data['max loops'] = max_loops
-    data['min progress'] = min_progress
-
-    # Create weights vector in json
-    data['weights'] = {}
-    for ind, wi in enumerate(weights):
-        s = 'w' + str(ind + 1)
-        data['weights'][s] = wi
-
-    # Create final solution in json
-    # Create x-vector in json
-    data['Final solution'] = {}
-    data['Final solution']['x'] = {}
-    for ind, xi in enumerate(final_sol.x):
-        s = 'x' + str(ind + 1)
-        data['Final solution']['x'][s] = xi
-
-    # Create f-vector in json
-    data['Final solution']['f'] = {}
-    for ind, fi in enumerate(final_sol.y):
-        s = 'f' + str(ind + 1)
-        data['Final solution']['f'][s] = fi
-
-    with open(file_name + ".txt", 'w') as output:
-        json.dump(data, output)
-
-    return
-
 
 # For every test, if the parameter Manual is True, then the test settings can be found in the directory of that
 # algorithm+benchmark problem. i.e.;
-# /Articulation/Tests/standardized_tests/TS/BK/[testSettingsFile.txt]
+# /Articulation/Tests/standardized_tests/TS/BK1/[testSettingsFile.txt]
 # All testSettingsFiles are named standard_i.txt, where i denotes the unique identifier of that test.
 # i is specified by parameter mantype, passed to every function as well.
+
+
+# Given the file_name (complete, with path), loads the standardized test parameters from the txt file written in json format
+# and dumps them to dictionary. Returns all values of dictionary.
+def load_standardized_test(f_name):
+    data = {}
+    with open(f_name, 'r') as json_file:
+        data = json.load(json_file)
+    return data["init_sol"], data["delta"], data["max_iter"], data["M"], data["tabu_list_max_length"], data["weights"], data["max_loops"], data["min_progress"], data["description"]
 
 
 # NOTE - I can modify these functions to add whether I want to save them to an Excel spreadhseet, or to confirm whether
 # I even want to plot the results, etc...
 def TS_BK1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
-    init_sol = delta = max_iter = M = tabu_list_max_length = weights = max_loops = min_progress = None
-
+    init_sol = delta = max_iter = M = tabu_list_max_length = weights = max_loops = min_progress = description = None
+    # description not used for now.
     # Setting up the algorithm parameters
     if manual is True:
-        pass
-        # need to implement this
+        # read the standard test setup from file
+        # /Articulation/Tests/standardized_tests/TS/BK1/standard_i.txt, where i is = std_ID
+        # load the json formatted data into a dictionary
+        # Get the data from the the function load_standardized_test
+        f_name = "/home/kemal/Programming/Python/Articulation/Tests/standardized_tests/TS/BK1/standard_" + str(std_ID) + ".txt"
+        init_sol_x_vect, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, description = load_standardized_test(f_name)
+        init_sol = Solution(init_sol_x_vect)
     else:
         # Boundaries for problem BK1 are x1 € [-5, 10], x2 € [-5, 10]
         random.seed(seed_val)
@@ -268,7 +186,7 @@ def TS_BK1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
         test_ID = len(entries) // 2
         file_name = "BK1_test_ID_" + str(test_ID)
         plt.savefig(file_name + '.png')
-        save_test_to_file_vol3(init_sol=init_sol, delta=delta, max_iter=max_iter, M=M, tabu_list_max_length=tabu_list_max_length,
+        save_test_to_file_vol(init_sol=init_sol, delta=delta, max_iter=max_iter, M=M, tabu_list_max_length=tabu_list_max_length,
                           weights=weights, max_loops=max_loops, min_progress=min_progress, final_sol=final_sol, seed_val=seed_val,
                           termination_reason=termination_reason, last_iter=last_iter, file_name=file_name)
     # plt.show()

@@ -4,12 +4,12 @@ import os as os
 
 """
 This script simply creates a python dictionary and dumps it to a specified location as a json file.
-I'm using this, so that I can easily generate a few json formatted settings, and then load them when doing python
-tests.
+I'm using this, so that I can easily generate a few json formatted settings, and then load them when doing tests.
 """
+
 # Specify save folder location for json file, and file name
 save_folder = "/home/kemal/Programming/Python/Articulation/Tests/standardized_tests/TS/BK1"
-file_name = "standard1"
+file_name = "standard_2"
 
 # Description for test
 description = "No description."
@@ -21,7 +21,7 @@ tabu_list_max_length = 20
 M = 100
 max_loops = 15
 min_progress = delta/10.
-weights = [0.5, 0.5]
+weights = [0.1, 0.9]
 init_sol = [-2, 6]
 
 
@@ -38,8 +38,8 @@ data['delta'] = delta
 data['max_iter'] = max_iter
 data['tabu_list_max_length'] = tabu_list_max_length
 data['M'] = M
-data['max loops'] = max_loops
-data['min progress'] = min_progress
+data['max_loops'] = max_loops
+data['min_progress'] = min_progress
 data['weights'] = weights
 data['init_sol'] = init_sol
 data['description'] = description

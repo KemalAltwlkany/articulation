@@ -2,8 +2,8 @@
 
 cd Tests
 
-declare -a names=("BK1" "FON" "SCH1")
-for seed in {0..1}
+declare -a names=("BK1")
+for seed in {0..5}
 do
 	for i in "${names[@]}"
 	do
