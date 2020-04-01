@@ -193,16 +193,214 @@ def TS_BK1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
     fig_num = fig_num + 1
 
 
-def FON():
-    print('Executed test FON')
+def TS_IM1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
+    init_sol = delta = max_iter = M = tabu_list_max_length = weights = max_loops = min_progress = description = None
+    # description not used for now.
+    # Setting up the algorithm parameters
+    if manual is True:
+        # read the standard test setup from file
+        # /Articulation/Tests/standardized_tests/TS/IM1/standard_i.txt, where i is = std_ID
+        # load the json formatted data into a dictionary
+        # Get the data from the the function load_standardized_test
+        f_name = "/home/kemal/Programming/Python/Articulation/Tests/standardized_tests/TS/IM1/standard_" + str(std_ID) + ".txt"
+        init_sol_x_vect, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, description = load_standardized_test(f_name)
+        init_sol = Solution(init_sol_x_vect)
+    else:
+        # Boundaries for problem IM1 are x1 € [1, 4], x2 € [1, 2]
+        random.seed(seed_val)
+        init_sol = Solution([random.uniform(1, 4), random.uniform(1, 2)])
+        delta = 0.001
+        max_iter = 500
+        max_loops = 15
+        min_progress = 0.0001
+        tabu_list_max_length = 20
+        M = 100
+        # random weights
+        a = round(random.uniform(0, 1), 2)
+        weights = [a, round(1 - a, 2)]
+
+    problem = MOO_Problem.IM1
+    constraints = [BoundaryConstraint([(1, 4), (1, 2)])]
+    search_alg = TabuSearchApriori(init_sol=init_sol, problem=problem, delta=delta, max_iter=max_iter,
+                                   constraints=constraints, M=M, tabu_list_max_length=tabu_list_max_length,
+                                   weights=weights, n_objectives=2, max_loops=max_loops, min_progress=min_progress)
+
+    # running Tabu Search on MOO Problem IM1
+    search_history, termination_reason, last_iter = search_alg.search()
+    final_sol = search_history[-1]
+    print('Final solution is: ', final_sol)
+
+    # plotting the objective space and the results (search history, etc...)
+    global fig_num
+    x1 = np.linspace(1, 4, 300)
+    x2 = np.linspace(1, 2, 300)
+    f1 = []
+    f2 = []
+    for i in x1:
+        for j in x2:
+            f1.append(2 * math.sqrt(i))
+            f2.append(i * (1 - j) + 5)
+    plt.figure()
+    plt.scatter(f1, f2, s=1.0)
+
+    # second part plots the Pareto front of the problem
+    f1 = 2*np.sqrt(x1)
+    x2 = 2
+    f2 = x1 * (1 - x2) + 5
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='y')
+
+    # plotting the search history
+    f1 = []
+    f2 = []
+    for sol in search_history:
+        f1.append(sol.y[0])
+        f2.append(sol.y[1])
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='r')
+    plt.plot([f1[0]], [f2[0]], marker=">", markersize=10, color='g')  # starting position (init sol)
+    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=10, color='k')  # final position (final sol)
+
+    # add some plot labels
+    # To every title I append the weights information as well, so firstly lets convert that to a string
+    w_str = 'w=[' + str(weights[0]) + ", " + str(weights[1]) + "]"
+    plt.title('Search history, Tabu Search, IM1 ' + w_str)
+    plt.xlabel('f1(x1, x2)')
+    plt.ylabel('f2(x1, x2)')
+    plt.xlim(0, 5)
+    plt.ylim(0, 5)
+    plt.grid(True)
+
+    # export data to json/txt in order to generate reports
+    if save is True:
+        # SAVE PROCEDURE
+        # 1.) Navigate to appropriate test folder
+        # 2.) Check number of files. Every test generates 2 files, .txt and .png. The test ID is equal to n_files / 2
+        # 3.) Save the plot
+        # 4.) Save the test data in json format to txt file
+
+        folder = "/home/kemal/Programming/Python/Articulation/Tests/test_results_raw/TS/TS_apriori/IM1"
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+        try:
+            os.chdir(folder)
+        except OSError:
+            print('Could not cwd to: ', folder)
+            print('Exiting with status flag 83.')
+            sys.exit(83)
+
+        entries = os.listdir(folder)
+        test_ID = len(entries) // 2
+        file_name = "IM1_test_ID_" + str(test_ID)
+        plt.savefig(file_name + '.png')
+        save_test_to_file_vol(init_sol=init_sol, delta=delta, max_iter=max_iter, M=M, tabu_list_max_length=tabu_list_max_length,
+                          weights=weights, max_loops=max_loops, min_progress=min_progress, final_sol=final_sol, seed_val=seed_val,
+                          termination_reason=termination_reason, last_iter=last_iter, file_name=file_name)
+    # plt.show()
+    fig_num = fig_num + 1
 
 
-def BK1():
-    print('Executed test BK1')
+def TS_SCH1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
+    init_sol = delta = max_iter = M = tabu_list_max_length = weights = max_loops = min_progress = description = None
+    # description not used for now.
+    # Setting up the algorithm parameters
+    if manual is True:
+        # read the standard test setup from file
+        # /Articulation/Tests/standardized_tests/TS/SCH1/standard_i.txt, where i is = std_ID
+        # load the json formatted data into a dictionary
+        # Get the data from the the function load_standardized_test
+        f_name = "/home/kemal/Programming/Python/Articulation/Tests/standardized_tests/TS/SCH1/standard_" + str(std_ID) + ".txt"
+        init_sol_x_vect, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, description = load_standardized_test(f_name)
+        init_sol = Solution(init_sol_x_vect)
+    else:
+        # Boundaries for problem SCH1 are x1 € [-10, 10]
+        random.seed(seed_val)
+        init_sol = Solution([random.uniform(0, 2)])
+        delta = 0.01
+        max_iter = 500
+        max_loops = 15
+        min_progress = 0.001
+        tabu_list_max_length = 20
+        M = 100
+        # random weights
+        a = round(random.uniform(0, 1), 2)
+        weights = [a, round(1 - a, 2)]
 
+    problem = MOO_Problem.SCH1
+    constraints = [BoundaryConstraint([(-10, 10)])]
+    search_alg = TabuSearchApriori(init_sol=init_sol, problem=problem, delta=delta, max_iter=max_iter,
+                                   constraints=constraints, M=M, tabu_list_max_length=tabu_list_max_length,
+                                   weights=weights, n_objectives=2, max_loops=max_loops, min_progress=min_progress)
 
-def SCH1():
-    print('Executed test SCH1')
+    # running Tabu Search on MOO Problem SCH1
+    search_history, termination_reason, last_iter = search_alg.search()
+    final_sol = search_history[-1]
+    print('Final solution is: ', final_sol)
+
+    # plotting the objective space and the results (search history, etc...)
+    global fig_num
+    x1 = np.linspace(-10, 10, 1000)
+    f1 = []
+    f2 = []
+    for i in x1:
+        f1.append(i ** 2)
+        f2.append((i - 2) ** 2)
+    plt.figure()
+    plt.scatter(f1, f2, s=1.0)
+
+    # second part plots the Pareto front of the problem
+    x1 = np.linspace(0, 2, 80)
+    f1 = x1**2
+    f2 = (x1 - 2)**2
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='y')
+
+    # plotting the search history
+    f1 = []
+    f2 = []
+    for sol in search_history:
+        f1.append(sol.y[0])
+        f2.append(sol.y[1])
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='r')
+    plt.plot([f1[0]], [f2[0]], marker=">", markersize=10, color='g')  # starting position (init sol)
+    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=10, color='k')  # final position (final sol)
+
+    # add some plot labels
+    # To every title I append the weights information as well, so firstly lets convert that to a string
+    w_str = 'w=[' + str(weights[0]) + ", " + str(weights[1]) + "]"
+    plt.title('Search history, Tabu Search, SCH1 ' + w_str)
+    plt.xlabel('f1(x1, x2)')
+    plt.ylabel('f2(x1, x2)')
+    plt.xlim(0, 6)
+    plt.ylim(0, 6)
+    plt.grid(True)
+
+    # export data to json/txt in order to generate reports
+    if save is True:
+        # SAVE PROCEDURE
+        # 1.) Navigate to appropriate test folder
+        # 2.) Check number of files. Every test generates 2 files, .txt and .png. The test ID is equal to n_files / 2
+        # 3.) Save the plot
+        # 4.) Save the test data in json format to txt file
+
+        folder = "/home/kemal/Programming/Python/Articulation/Tests/test_results_raw/TS/TS_apriori/SCH1"
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+        try:
+            os.chdir(folder)
+        except OSError:
+            print('Could not cwd to: ', folder)
+            print('Exiting with status flag 83.')
+            sys.exit(83)
+
+        entries = os.listdir(folder)
+        test_ID = len(entries) // 2
+        file_name = "SCH1_test_ID_" + str(test_ID)
+        plt.savefig(file_name + '.png')
+        save_test_to_file_vol(init_sol=init_sol, delta=delta, max_iter=max_iter, M=M, tabu_list_max_length=tabu_list_max_length,
+                          weights=weights, max_loops=max_loops, min_progress=min_progress, final_sol=final_sol, seed_val=seed_val,
+                          termination_reason=termination_reason, last_iter=last_iter, file_name=file_name)
+    # plt.show()
+    fig_num = fig_num + 1
 
 
 def main():
@@ -237,12 +435,12 @@ def main():
     else:
         save = False
 
-    if prob == 'FON':
-        FON()
+    if prob == 'IM1':
+        TS_IM1_core(manual=man, std_ID=std_ID_, seed_val=seed_val_, toPlot=True, save=save)
     elif prob == 'BK1':
         TS_BK1_core(manual=man, std_ID=std_ID_, seed_val=seed_val_, toPlot=True, save=save)
     elif prob == 'SCH1':
-        SCH1()
+        TS_SCH1_core(manual=man, std_ID=std_ID_, seed_val=seed_val_, toPlot=True, save=save)
     else:
         print('Error! Did not find benchmark problem name! Exiting with value 10.')
         sys.exit(10)

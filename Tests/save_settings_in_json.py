@@ -8,21 +8,21 @@ I'm using this, so that I can easily generate a few json formatted settings, and
 """
 
 # Specify save folder location for json file, and file name
-save_folder = "/home/kemal/Programming/Python/Articulation/Tests/standardized_tests/TS/BK1"
-file_name = "standard_2"
+save_folder = "/home/kemal/Programming/Python/Articulation/Tests/standardized_tests/TS/SCH1"
+file_name = "standard_0"
 
 # Description for test
 description = "No description."
 
 # Specify values here
-delta = 0.01
+delta = 0.001
 max_iter = 500
 tabu_list_max_length = 20
 M = 100
 max_loops = 15
 min_progress = delta/10.
-weights = [0.1, 0.9]
-init_sol = [-2, 6]
+weights = [0.5, 0.5]
+init_sol = [-7]
 
 
 

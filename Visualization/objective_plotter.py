@@ -205,8 +205,8 @@ def SCH1():
     f1 = []
     f2 = []
     for x1 in x1_space:
-            f1.append(x1**2)
-            f2.append((x1-2)**2)
+        f1.append(x1**2)
+        f2.append((x1-2)**2)
 
     plt.figure(fig_num)
     plt.scatter(f1, f2)

@@ -12,6 +12,7 @@ class TabuSearch(SearchAlgorithm):
         self.max_loops = max_loops    # maximum steps tolerated for the algorithm to run without any significant change in the search occurring
         self.tabu_list = []
         self.tabu_list_max_length = tabu_list_max_length
+        self.global_best_sol = None
 
     # uses abstract methods, so only child classes can invoke this method
     def search(self, verbose=False):
@@ -22,6 +23,7 @@ class TabuSearch(SearchAlgorithm):
         self.search_history.append(copy.deepcopy(self.curr_sol))
         iters_no_progress = 0   # number of iterations without any significant change
         all_iters_time = []
+        self.global_best_sol = copy.deepcopy(self.curr_sol)
         while it < self.max_iter:
             total_time = time.time()
             s1 = time.time()
@@ -75,6 +77,7 @@ class TabuSearch(SearchAlgorithm):
 
             s1 = time.time()
             self.curr_sol = self.neighborhood[0]    # new solution becomes the best of the neighborhood
+            # NEED TO UPDATE GLOBAL SOLUTION!
             self.search_history.append(copy.deepcopy(self.curr_sol))
             if prev_sol == self.curr_sol:
                 print('Terminating after iteration number', it, ' because local extrema was found')

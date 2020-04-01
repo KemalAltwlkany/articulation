@@ -7,6 +7,7 @@ class MOO_Problem:
     in one nice class, which should be used as static functions.
     """
 
+
     @staticmethod
     def BK1(x):
         """
@@ -59,6 +60,17 @@ class MOO_Problem:
         f1 = 2*math.sqrt(x[0])
         f2 = x[0]*(1-x[1]) + 5
         return [f1, f2]
+
+    @staticmethod
+    def SCH1(x):
+        """
+        SCH1 - Schaffers test function, from Schaffer 1984, I cited it from:
+        "K. Deb, L. Thiele, M. Laumanns, E. Zitzler - Scalable test problems for evolutionary multi-objective optimization"
+        The Pareto optimal front can be obtained for any:
+        x € [0, 2] (Pareto optimal set).
+        :return:
+        """
+        return [x[0]**2, (x[0] - 2)**2]
 
     @staticmethod
     def FON(x):
