@@ -25,6 +25,91 @@ from LocalSearch.LS_apriori import LocalSearchApriori
 
 fig_num = 1
 
+def save_test_to_file_vol3(init_sol, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, final_sol,
+                           seed_val, termination_reason, last_iter, file_name):
+    f = open(file_name + ".txt", "w")
+    # fpdf library ignores \t and \n's, so we embedded indentation by adding it manually
+    wh = "        "  # an eight-character width whitespace (2xtab)
+    f.write('----------------------------------------------Algorithm parameters----------------------------------------------'  + "\n")
+    f.write(wh + 'Delta = == ' + str(delta) + "\n")
+    f.write(wh + 'Max iterations = == ' + str(max_iter) + "\n")
+    f.write(wh + 'M (criteria punishment) = == ' + str(M) + "\n")
+    f.write(wh + 'Seed = == ' + str(seed_val) + "\n")
+    f.write(wh + 'Max loops = == ' + str(max_loops) + "\n")
+    f.write(wh + 'Min progress = == ' + str(min_progress) + "\n")
+    f.write(wh + 'Tabu list max length = == ' + str(tabu_list_max_length) + "\n")
+    f.write(wh + 'Weights = {' + "\n")
+    for ind, wi in enumerate(weights):
+        f.write(wh + wh + 'w' + str(ind + 1) + " = == " + str(wi) + "\n")
+    f.write(wh + "}\n")
+    f.write("----------------------------------------------Performance----------------------------------------------------------\n")
+    f.write(wh + 'Termination reason = == ' + str(termination_reason) + "\n")
+    f.write(wh + "Last iteration = == " + str(last_iter) + "\n")
+    f.write("---------------------------------------------------------------------\n")
+    f.write(wh + 'Initial solution:' + "\n")
+    f.write(wh + wh + 'x = { ' + "\n")
+    for ind, xi in enumerate(init_sol.x):
+        f.write(wh + wh + wh + 'x' + str(ind + 1) + " = == " + str(xi) + "\n")
+    f.write(wh + wh + '}\n')
+    f.write(wh + wh + 'f = {\n')
+    for ind, fi in enumerate(init_sol.y):
+        f.write(wh + wh + wh + 'f' + str(ind + 1) + " = == " + str(fi) + "\n")
+    f.write(wh + wh + '}\n')
+    f.write("---------------------------------------------------------------------\n")
+    f.write(wh + 'Final solution:\n')
+    f.write(wh + wh + 'x = {\n')
+    for ind, xi in enumerate(final_sol.x):
+        f.write(wh + wh + wh + 'x' + str(ind + 1) + " = == " + str(xi) + "\n")
+    f.write(wh + wh + '}\n')
+    f.write(wh + wh + 'f = {\n')
+    for ind, fi in enumerate(final_sol.y):
+        f.write(wh + wh + wh + 'f' + str(ind + 1) + " = == " + str(fi) + "\n")
+    f.write(wh + wh + '}')
+    f.close()
+
+
+def save_test_to_file_vol2(init_sol, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, final_sol,
+                           seed_val, termination_reason, last_iter, file_name):
+    f = open(file_name + ".txt", "w")
+    f.write(str(len(init_sol.y)) + "\n")   # embedded the dimensions of the search and fitness space in the file
+    f.write(str(len(init_sol.x)) + "\n")
+    f.write('-----------------Algorithm parameters-----------------'  + "\n")
+    f.write('Delta = ' + str(delta) + "\n")
+    f.write('Max iterations = ' + str(max_iter) + "\n")
+    f.write('M (criteria punishment) = ' + str(M) + "\n")
+    f.write('Seed = ' + str(seed_val) + "\n")
+    f.write('Max loops = ' + str(max_loops) + "\n")
+    f.write('Min progress = ' + str(min_progress) + "\n")
+    f.write('Tabu list max length = ' + str(tabu_list_max_length) + "\n")
+    f.write('Weights = {' + "\n")
+    for ind, wi in enumerate(weights):
+        f.write('w' + str(ind + 1) + " = " + str(wi) + "\n")
+    f.write("}\n")
+    f.write("-----------------Performance-----------------\n")
+    f.write('Termination reason: ' + str(termination_reason) + "\n")
+    f.write("Last iteration = " + str(last_iter) + "\n")
+    f.write("-----------\n")
+    f.write('Initial solution:' + "\n")
+    f.write('x = { ' + "\n")
+    for ind, xi in enumerate(init_sol.x):
+        f.write('x' + str(ind + 1) + " = " + str(xi) + "\n")
+    f.write('}\n')
+    f.write('f = {\n')
+    for ind, fi in enumerate(init_sol.y):
+        f.write('f' + str(ind + 1) + " = " + str(fi) + "\n")
+    f.write('}\n')
+    f.write("-----------\n")
+    f.write('Final solution:\n')
+    f.write('x = {\n')
+    for ind, xi in enumerate(final_sol.x):
+        f.write('x' + str(ind + 1) + " = " + str(xi) + "\n")
+    f.write('}\n')
+    f.write('f = {\n')
+    for ind, fi in enumerate(final_sol.y):
+        f.write('f' + str(ind + 1) + " = " + str(fi) + "\n")
+    f.write('}')
+    f.close()
+
 def save_test_to_file(init_sol, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, final_sol,
                       seed_val, termination_reason, last_iter, file_name):
     data = {}
@@ -86,8 +171,8 @@ def save_test_to_file(init_sol, delta, max_iter, M, tabu_list_max_length, weight
 # i is specified by parameter mantype, passed to every function as well.
 
 
-# NOTE - I can modify these functions to add whether I want to save them to an Excel spreadhseet, or if I even want to
-# plot the results, etc...
+# NOTE - I can modify these functions to add whether I want to save them to an Excel spreadhseet, or to confirm whether
+# I even want to plot the results, etc...
 def TS_BK1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
     init_sol = delta = max_iter = M = tabu_list_max_length = weights = max_loops = min_progress = None
 
@@ -183,7 +268,7 @@ def TS_BK1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
         test_ID = len(entries) // 2
         file_name = "BK1_test_ID_" + str(test_ID)
         plt.savefig(file_name + '.png')
-        save_test_to_file(init_sol=init_sol, delta=delta, max_iter=max_iter, M=M, tabu_list_max_length=tabu_list_max_length,
+        save_test_to_file_vol3(init_sol=init_sol, delta=delta, max_iter=max_iter, M=M, tabu_list_max_length=tabu_list_max_length,
                           weights=weights, max_loops=max_loops, min_progress=min_progress, final_sol=final_sol, seed_val=seed_val,
                           termination_reason=termination_reason, last_iter=last_iter, file_name=file_name)
     # plt.show()
