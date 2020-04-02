@@ -48,7 +48,7 @@ class GreaterThanConstraint(Constraint):
         if val > 0:
             return True, 0
         else:
-            return False, val
+            return False, math.fabs(val)
 
 
 class LessThanConstraint(Constraint):
@@ -96,4 +96,13 @@ class BoundaryConstraint:
                 val = val + 1
                 satisfied = False
         return satisfied, val
+
+
+def TNK_constraint_1(x):
+    if math.isclose(x[0], 0):
+        return math.pow(x[1], 2) - 1.1 # atan not defined for x[0] = 0. Assume cos(atan(inf))=1
+    return math.pow(x[0], 2) + math.pow(x[1], 2) - 1 - 0.1*math.cos(16*math.atan(x[1]/x[0]))
+
+def TNK_constraint_2(x):
+    return math.pow(x[0] - 0.5, 2) + math.pow(x[1] - 0.5, 2) - 0.5
 

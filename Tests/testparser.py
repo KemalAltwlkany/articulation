@@ -17,7 +17,7 @@ import math as math
 sys.path.insert(0, "/home/kemal/Programming/Python/Articulation")
 from PreferenceArticulation.Solution import Solution
 from PreferenceArticulation.BenchmarkObjectives import MOO_Problem
-from PreferenceArticulation.Constraints import BoundaryConstraint
+from PreferenceArticulation.Constraints import *
 from TabuSearch.TS_apriori import TabuSearchApriori
 from LocalSearch.LS_apriori import LocalSearchApriori
 
@@ -119,8 +119,8 @@ def TS_BK1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
                                    weights=weights, n_objectives=2, max_loops=max_loops, min_progress=min_progress)
 
     # running Tabu Search on MOO Problem BK1
-    search_history, termination_reason, last_iter = search_alg.search()
-    final_sol = search_history[-1]
+    search_history, termination_reason, last_iter, glob_sol = search_alg.search()
+    final_sol = glob_sol
     print('Final solution is: ', final_sol)
 
     # plotting the objective space and the results (search history, etc...)
@@ -134,14 +134,14 @@ def TS_BK1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
             f1.append(i ** 2 + j ** 2)
             f2.append((i - 5) ** 2 + (j - 5) ** 2)
     plt.figure()
-    plt.scatter(f1, f2, s=1.0)
+    plt.scatter(f1, f2, s=1.0, color='dodgerblue')
 
     # second part plots the Pareto front of the problem
     x1 = np.linspace(0, 5, 50)
     x2 = np.linspace(0, 5, 50)
     f1 = x1 ** 2 + x2 ** 2
     f2 = (x1 - 5) ** 2 + (x2 - 5) ** 2
-    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='y')
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='navy')
 
     # plotting the search history
     f1 = []
@@ -149,10 +149,10 @@ def TS_BK1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
     for sol in search_history:
         f1.append(sol.y[0])
         f2.append(sol.y[1])
-    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='r')
-    plt.plot([f1[0]], [f2[0]], marker=">", markersize=10, color='g')  # starting position (init sol)
-    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=10, color='k')  # final position (final sol)
-
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='red')
+    plt.plot([f1[0]], [f2[0]], marker=">", markersize=15, color='darkgreen')  # starting position (init sol)
+    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=15, color='darkgreen')  # final position (final sol)
+    plt.plot(final_sol.y[0], final_sol.y[1], marker="*", markersize=15, color='gold')
     # add some plot labels
     # To every title I append the weights information as well, so firstly lets convert that to a string
     w_str = 'w=[' + str(weights[0]) + ", " + str(weights[1]) + "]"
@@ -226,8 +226,8 @@ def TS_IM1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
                                    weights=weights, n_objectives=2, max_loops=max_loops, min_progress=min_progress)
 
     # running Tabu Search on MOO Problem IM1
-    search_history, termination_reason, last_iter = search_alg.search()
-    final_sol = search_history[-1]
+    search_history, termination_reason, last_iter, glob_sol = search_alg.search()
+    final_sol = glob_sol
     print('Final solution is: ', final_sol)
 
     # plotting the objective space and the results (search history, etc...)
@@ -241,13 +241,13 @@ def TS_IM1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
             f1.append(2 * math.sqrt(i))
             f2.append(i * (1 - j) + 5)
     plt.figure()
-    plt.scatter(f1, f2, s=1.0)
+    plt.scatter(f1, f2, s=1.0, color='dodgerblue')
 
     # second part plots the Pareto front of the problem
     f1 = 2*np.sqrt(x1)
     x2 = 2
     f2 = x1 * (1 - x2) + 5
-    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='y')
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='navy')
 
     # plotting the search history
     f1 = []
@@ -255,9 +255,10 @@ def TS_IM1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
     for sol in search_history:
         f1.append(sol.y[0])
         f2.append(sol.y[1])
-    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='r')
-    plt.plot([f1[0]], [f2[0]], marker=">", markersize=10, color='g')  # starting position (init sol)
-    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=10, color='k')  # final position (final sol)
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='red')
+    plt.plot([f1[0]], [f2[0]], marker=">", markersize=15, color='darkgreen')  # starting position (init sol)
+    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=15, color='darkgreen')  # final position (final sol)
+    plt.plot(final_sol.y[0], final_sol.y[1], marker="*", markersize=15, color='gold')
 
     # add some plot labels
     # To every title I append the weights information as well, so firstly lets convert that to a string
@@ -332,8 +333,8 @@ def TS_SCH1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False)
                                    weights=weights, n_objectives=2, max_loops=max_loops, min_progress=min_progress)
 
     # running Tabu Search on MOO Problem SCH1
-    search_history, termination_reason, last_iter = search_alg.search()
-    final_sol = search_history[-1]
+    search_history, termination_reason, last_iter, glob_sol = search_alg.search()
+    final_sol = glob_sol
     print('Final solution is: ', final_sol)
 
     # plotting the objective space and the results (search history, etc...)
@@ -345,13 +346,13 @@ def TS_SCH1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False)
         f1.append(i ** 2)
         f2.append((i - 2) ** 2)
     plt.figure()
-    plt.scatter(f1, f2, s=1.0)
+    plt.scatter(f1, f2, s=1.0, color='dodgerblue')
 
     # second part plots the Pareto front of the problem
     x1 = np.linspace(0, 2, 80)
     f1 = x1**2
     f2 = (x1 - 2)**2
-    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='y')
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='navy')
 
     # plotting the search history
     f1 = []
@@ -359,9 +360,10 @@ def TS_SCH1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False)
     for sol in search_history:
         f1.append(sol.y[0])
         f2.append(sol.y[1])
-    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='r')
-    plt.plot([f1[0]], [f2[0]], marker=">", markersize=10, color='g')  # starting position (init sol)
-    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=10, color='k')  # final position (final sol)
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='red')
+    plt.plot([f1[0]], [f2[0]], marker=">", markersize=15, color='darkgreen')  # starting position (init sol)
+    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=15, color='darkgreen')  # final position (final sol)
+    plt.plot(final_sol.y[0], final_sol.y[1], marker="*", markersize=15, color='gold')
 
     # add some plot labels
     # To every title I append the weights information as well, so firstly lets convert that to a string
@@ -403,6 +405,286 @@ def TS_SCH1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False)
     fig_num = fig_num + 1
 
 
+def TS_FON_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
+    init_sol = delta = max_iter = M = tabu_list_max_length = weights = max_loops = min_progress = description = None
+    # description not used for now.
+    # Setting up the algorithm parameters
+    if manual is True:
+        # read the standard test setup from file
+        # /Articulation/Tests/standardized_tests/TS/SCH1/standard_i.txt, where i is = std_ID
+        # load the json formatted data into a dictionary
+        # Get the data from the the function load_standardized_test
+        f_name = "/home/kemal/Programming/Python/Articulation/Tests/standardized_tests/TS/FON/standard_" + str(std_ID) + ".txt"
+        init_sol_x_vect, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, description = load_standardized_test(f_name)
+        init_sol = Solution(init_sol_x_vect)
+    else:
+        # Boundaries for problem FON are xi € [-4, 4]
+        random.seed(seed_val)
+        init_sol = Solution([random.uniform(-4, 4), random.uniform(-4, 4), random.uniform(-4, 4)])
+        delta = 0.005
+        max_iter = 800
+        max_loops = 25
+        min_progress = 0.0001
+        tabu_list_max_length = 30
+        M = 100
+        # random weights
+        a = round(random.uniform(0, 1), 2)
+        weights = [a, round(1 - a, 2)]
+
+    problem = MOO_Problem.FON
+    constraints = [BoundaryConstraint([(-4, 4), (-4, 4), (-4, 4)])]
+    search_alg = TabuSearchApriori(init_sol=init_sol, problem=problem, delta=delta, max_iter=max_iter,
+                                   constraints=constraints, M=M, tabu_list_max_length=tabu_list_max_length,
+                                   weights=weights, n_objectives=2, max_loops=max_loops, min_progress=min_progress)
+
+    # running Tabu Search on MOO Problem FON
+    search_history, termination_reason, last_iter, glob_sol = search_alg.search()
+    final_sol = glob_sol
+    print('Final solution is: ', final_sol)
+
+    # plotting the objective space and the results (search history, etc...)
+    global fig_num
+    x_space = np.linspace(-4, 4, 100)  # same for all variables xi, for i=1,...,n
+    f1 = []
+    f2 = []
+    p = 1./math.sqrt(3.)
+    for x1 in x_space:
+        for x2 in x_space:
+            for x3 in x_space:
+                sum1 = math.pow(x1 - p, 2) + math.pow(x2 - p, 2) + math.pow(x3 - p, 2)
+                sum2 = math.pow(x1 + p, 2) + math.pow(x2 + p, 2) + math.pow(x3 + p, 2)
+                f1.append(1 - math.exp(-sum1))
+                f2.append(1 - math.exp(-sum2))
+    plt.figure()
+    plt.scatter(f1, f2, s=1.0, color='dodgerblue')
+
+    # second part plots the Pareto front of the problem
+    x_space = np.linspace(-p, p, 100)
+    f1 = []
+    f2 = []
+    for x1 in x_space:
+        x2 = x1
+        x3 = x1
+        sum1 = math.pow(x1 - p, 2) + math.pow(x2 - p, 2) + math.pow(x3 - p, 2)
+        sum2 = math.pow(x1 + p, 2) + math.pow(x2 + p, 2) + math.pow(x3 + p, 2)
+        f1.append(1 - math.exp(-sum1))
+        f2.append(1 - math.exp(-sum2))
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='navy')
+
+    # plotting the search history
+    f1 = []
+    f2 = []
+    for sol in search_history:
+        f1.append(sol.y[0])
+        f2.append(sol.y[1])
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='red')
+    plt.plot([f1[0]], [f2[0]], marker=">", markersize=15, color='darkgreen')  # starting position (init sol)
+    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=15, color='darkgreen')  # final position (final sol)
+    plt.plot(final_sol.y[0], final_sol.y[1], marker="*", markersize=15, color='gold')
+
+    # add some plot labels
+    # To every title I append the weights information as well, so firstly lets convert that to a string
+    w_str = 'w=[' + str(weights[0]) + ", " + str(weights[1]) + "]"
+    plt.title('Search history, Tabu Search, FON ' + w_str)
+    plt.xlabel('f1(x1, x2)')
+    plt.ylabel('f2(x1, x2)')
+    plt.xlim(0, 1.2)
+    plt.ylim(0, 1.2)
+    plt.grid(True)
+
+    # export data to json/txt in order to generate reports
+    if save is True:
+        # SAVE PROCEDURE
+        # 1.) Navigate to appropriate test folder
+        # 2.) Check number of files. Every test generates 2 files, .txt and .png. The test ID is equal to n_files / 2
+        # 3.) Save the plot
+        # 4.) Save the test data in json format to txt file
+
+        folder = "/home/kemal/Programming/Python/Articulation/Tests/test_results_raw/TS/TS_apriori/FON"
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+        try:
+            os.chdir(folder)
+        except OSError:
+            print('Could not cwd to: ', folder)
+            print('Exiting with status flag 83.')
+            sys.exit(83)
+
+        entries = os.listdir(folder)
+        test_ID = len(entries) // 2
+        file_name = "FON_test_ID_" + str(test_ID)
+        plt.savefig(file_name + '.png')
+        save_test_to_file_vol(init_sol=init_sol, delta=delta, max_iter=max_iter, M=M, tabu_list_max_length=tabu_list_max_length,
+                          weights=weights, max_loops=max_loops, min_progress=min_progress, final_sol=final_sol, seed_val=seed_val,
+                          termination_reason=termination_reason, last_iter=last_iter, file_name=file_name)
+    # plt.show()
+    fig_num = fig_num + 1
+
+#NEED TO FIX THIS
+
+def TS_TNK_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
+    init_sol = delta = max_iter = M = tabu_list_max_length = weights = max_loops = min_progress = description = None
+    # description not used for now.
+    # Setting up the algorithm parameters
+    if manual is True:
+        # read the standard test setup from file
+        # /Articulation/Tests/standardized_tests/TS/TNK/standard_i.txt, where i is = std_ID
+        # load the json formatted data into a dictionary
+        # Get the data from the the function load_standardized_test
+        f_name = "/home/kemal/Programming/Python/Articulation/Tests/standardized_tests/TS/TNK/standard_" + str(std_ID) + ".txt"
+        init_sol_x_vect, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, description = load_standardized_test(f_name)
+        init_sol = Solution(init_sol_x_vect)
+    else:
+        # Boundaries for problem TNK are xi € [0, pi]
+        # NOTE - WHEN CHOOSING RANDOM INITIAL SOLUTION, IT MUST BE ENSURED THAT IT SATISFIES THE CONSTRAINTS!
+        random.seed(seed_val)
+        x1_init = 0
+        x2_init = 0
+        while 1:
+            x1_init, x2_init = random.uniform(0, math.pi), random.uniform(0, math.pi)
+            # check whether constraints are satisfied
+            if math.isclose(x1_init, 0):
+                c1_init = math.pow(x2_init, 2) - 1.1
+            else:
+                c1_init = math.pow(x1_init, 2) + math.pow(x2_init, 2) - 1 - 0.1*math.cos(16*math.atan(x2_init/x1_init))
+            c2_init = math.pow(x1_init - 0.5, 2) + math.pow(x2_init - 0.5, 2) - 0.5
+            if c1_init >= 0 >= c2_init:
+                break
+        init_sol = Solution([x1_init, x2_init])
+        delta = 0.01
+        max_iter = 200
+        max_loops = 25
+        min_progress = 0.0001
+        tabu_list_max_length = 30
+        M = 100
+        # random weights
+        a = round(random.uniform(0, 1), 2)
+        weights = [a, round(1 - a, 2)]
+
+    problem = MOO_Problem.TNK
+    const1 = BoundaryConstraint([(0, math.pi), (0, math.pi)])
+    const2 = GreaterThanConstraint(TNK_constraint_1)
+    const3 = LessThanConstraint(TNK_constraint_2)
+    constraints = [const1, const2, const3]
+    search_alg = TabuSearchApriori(init_sol=init_sol, problem=problem, delta=delta, max_iter=max_iter,
+                                   constraints=constraints, M=M, tabu_list_max_length=tabu_list_max_length,
+                                   weights=weights, n_objectives=2, max_loops=max_loops, min_progress=min_progress)
+
+    # running Tabu Search on MOO Problem TNK
+    search_history, termination_reason, last_iter, glob_sol = search_alg.search()
+    final_sol = glob_sol
+    print('Final solution is: ', final_sol)
+
+    # plotting the objective space and the results (search history, etc...)
+    global fig_num
+    x1_space = np.linspace(0, math.pi, 200)  # should be extra dense, because of the non-convex border
+    x2_space = np.linspace(0, math.pi, 200)
+    f1 = []
+    f2 = []
+    for x1 in x1_space:
+        for x2 in x2_space:
+            if math.isclose(x1, 0):
+                c1 = math.pow(x2, 2) - 1.1
+            else:
+                c1 = math.pow(x1, 2) + math.pow(x2, 2) - 1 - 0.1 * math.cos(16 * math.atan(x2 / x1))
+            c2 = math.pow(x1 - 0.5, 2) + math.pow(x2 - 0.5, 2) - 0.5
+            if c1 >= 0 >= c2:
+                f1.append(x1)
+                f2.append(x2)
+    plt.figure()
+    plt.scatter(f1, f2, s=1.0, color='dodgerblue')
+
+    # second part plots the Pareto front of the problem
+    f1 = []
+    f2 = []
+    x1_space = np.linspace(0, math.pi, 1000)
+    x2_space = np.linspace(0, math.pi, 1000)
+    for x1 in x1_space:
+        for x2 in x2_space:
+            if math.isclose(x1, 0):
+                c1 = math.pow(x2, 2) - 1.1
+            else:
+                c1 = math.pow(x1, 2) + math.pow(x2, 2) - 1 - 0.1 * math.cos(16 * math.atan(x2 / x1))
+            c2 = math.pow(x1 - 0.5, 2) + math.pow(x2 - 0.5, 2) - 0.5
+            if math.isclose(c1, 0, abs_tol=0.001) and 0.0 >= c2:
+                f1.append(x1)
+                f2.append(x2)
+
+    f1_pom = []
+    f2_pom = []
+    # this additional nested for-loop is a brute-force method that filters out the actual Pareto optimums.
+    # the reason for this is that even though the previous piece of code does find the curve which defines the
+    # region border, its non convex and not the entire curve makes up the Pareto front.
+    for i in range(len(f1)):
+        p1, p2 = f1[i], f2[i]
+        trig = False
+        for j in range(len(f1)):
+            if p1 - f1[j] > 0 and p2 - f2[j] > 0:
+                trig = True
+                break
+            else:
+                continue
+        if not trig:
+            f1_pom.append(p1)
+            f2_pom.append(p2)
+
+    f1 = f1_pom
+    f2 = f2_pom
+    plt.scatter(f1, f2, linewidth=3.5, linestyle='-', color='navy')
+
+    # plotting the search history
+    f1 = []
+    f2 = []
+    for sol in search_history:
+        f1.append(sol.y[0])
+        f2.append(sol.y[1])
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='red')
+    plt.plot([f1[0]], [f2[0]], marker=">", markersize=15, color='darkgreen')  # starting position (init sol)
+    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=15, color='darkgreen')  # final position (final sol)
+    plt.plot(final_sol.y[0], final_sol.y[1], marker="*", markersize=15, color='gold')
+
+    # add some plot labels
+    # To every title I append the weights information as well, so firstly lets convert that to a string
+    w_str = 'w=[' + str(weights[0]) + ", " + str(weights[1]) + "]"
+    plt.title('Search history, Tabu Search, TNK ' + w_str)
+    plt.xlabel('f1(x1) = x1')
+    plt.ylabel('f2(x2) = x2')
+    plt.xlim(0, 1.4)
+    plt.ylim(0, 1.4)
+    plt.grid(True)
+
+    # export data to json/txt in order to generate reports
+    if save is True:
+        # SAVE PROCEDURE
+        # 1.) Navigate to appropriate test folder
+        # 2.) Check number of files. Every test generates 2 files, .txt and .png. The test ID is equal to n_files / 2
+        # 3.) Save the plot
+        # 4.) Save the test data in json format to txt file
+
+        folder = "/home/kemal/Programming/Python/Articulation/Tests/test_results_raw/TS/TS_apriori/TNK"
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+        try:
+            os.chdir(folder)
+        except OSError:
+            print('Could not cwd to: ', folder)
+            print('Exiting with status flag 83.')
+            sys.exit(83)
+
+        entries = os.listdir(folder)
+        test_ID = len(entries) // 2
+        file_name = "TNK_test_ID_" + str(test_ID)
+        plt.savefig(file_name + '.png')
+        save_test_to_file_vol(init_sol=init_sol, delta=delta, max_iter=max_iter, M=M, tabu_list_max_length=tabu_list_max_length,
+                          weights=weights, max_loops=max_loops, min_progress=min_progress, final_sol=final_sol, seed_val=seed_val,
+                          termination_reason=termination_reason, last_iter=last_iter, file_name=file_name)
+    # plt.show()
+    fig_num = fig_num + 1
+
+
+
 def main():
     args = copy.deepcopy(sys.argv[1:])  # the 0-th argument is the name of the file passed as argument
     long_options = ['manual=', 'seed=', 'problem=', 'stdID=', 'save=']
@@ -413,8 +695,8 @@ def main():
         print(str(err))
         print('Exiting program, with value 5.')
         sys.exit(5)
-    print(args)
-    print(optlist)
+    # print(args)
+    # print(optlist)
     # convert the optlist from list to dict
     data = {}
     for opt, val in optlist:
@@ -441,6 +723,10 @@ def main():
         TS_BK1_core(manual=man, std_ID=std_ID_, seed_val=seed_val_, toPlot=True, save=save)
     elif prob == 'SCH1':
         TS_SCH1_core(manual=man, std_ID=std_ID_, seed_val=seed_val_, toPlot=True, save=save)
+    elif prob == 'FON':
+        TS_FON_core(manual=man, std_ID=std_ID_, seed_val=seed_val_, toPlot=True, save=save)
+    elif prob == 'TNK':
+        TS_TNK_core(manual=man, std_ID=std_ID_, seed_val=seed_val_, toPlot=True, save=save)
     else:
         print('Error! Did not find benchmark problem name! Exiting with value 10.')
         sys.exit(10)

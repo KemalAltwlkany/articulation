@@ -1,7 +1,6 @@
 from PreferenceArticulation.SearchAlgorithm import SearchAlgorithm
 from PreferenceArticulation.ArticulationExceptions import AbstractMethod
 import copy as copy
-import time as time
 
 class TabuSearch(SearchAlgorithm):
 
@@ -22,62 +21,31 @@ class TabuSearch(SearchAlgorithm):
         self.curr_sol = copy.deepcopy(self.init_sol)
         self.search_history.append(copy.deepcopy(self.curr_sol))
         iters_no_progress = 0   # number of iterations without any significant change
-        all_iters_time = []
         self.global_best_sol = copy.deepcopy(self.curr_sol)
         while it < self.max_iter:
-            total_time = time.time()
-            s1 = time.time()
+
             it = it + 1
             prev_sol = copy.deepcopy(self.curr_sol)
-            s2 = time.time()
-            print("Time needed for iter increment + copy.deepcopy is: ", s2 - s1)
 
-            s1 = time.time()
             self.generate_neighborhood(self.curr_sol)
-            s2 = time.time()
-            print("Time needed for generate neighborhood is : ", s2 - s1)
-
-            # Evaluating the fitness of a solution is costly. It is better to firstly purge the Tabu list
-            # and to evaluate the neighborhood afterwards
-            # Prone to mistakes. Should verify.
-            # s1 = time.time()
-            # for tabu_sol in self.tabu_list:
-            #     if tabu_sol in self.neighborhood:
-            #         self.neighborhood.remove(tabu_sol)
-            # s2 = time.time()
-            # print("Time needed for purging tabu list before evaluating solutions: ", s2 - s1)
-
-
-            # It turned out questioning the statement above was good. It is not worth it to firstly purge the
-            # Tabu list and to evaluate the neighborhood afterwards. It is better to evaluate the neighborhood,
-            # and to continue picking solutions until they are no longer in the tabu list. Logically, we should start
-            # checking from the end of the tabu list (if the elements are there).
-
-
-
             # Evaluate the individuals now
-            s1 = time.time()
             self.evaluate_neighborhood()
-            s2 = time.time()
-            print("Time needed for evaluating neighborhood:", s2 - s1)
-
-            s1 = time.time()
             self.sort_neighborhood()
-            s2 = time.time()
-            print("Time needed for sorting neighborhood: ", s2 - s1)
 
-            s1 = time.time()
+            # purge neighborhood from Tabu elements
             while 1:
                 if self.neighborhood[0] in self.tabu_list:
                     del self.neighborhood[0]
                 else:
                     break
-            s2 = time.time()
-            print("Time needed for purging neighborhood from taboos: ", s2 - s1)
 
-            s1 = time.time()
             self.curr_sol = self.neighborhood[0]    # new solution becomes the best of the neighborhood
             # NEED TO UPDATE GLOBAL SOLUTION!
+
+            if self.__class__.compute_fitness(self.global_best_sol) > self.__class__.compute_fitness(self.curr_sol):
+                # global solution is worse than newly found solution, update!
+                self.global_best_sol = copy.deepcopy(self.curr_sol)
+
             self.search_history.append(copy.deepcopy(self.curr_sol))
             if prev_sol == self.curr_sol:
                 print('Terminating after iteration number', it, ' because local extrema was found')
@@ -91,41 +59,20 @@ class TabuSearch(SearchAlgorithm):
             # in order to optimize, new tabu entries should be put in the beginning, not the end
             # self.tabu_list.append(copy.deepcopy(self.curr_sol))
             self.tabu_list.insert(0, copy.deepcopy(self.curr_sol))
-            s2 = time.time()
-            print("Time needed for updating tabu list and curr solution: ", s2 - s1)
 
-
-            s1 = time.time()
             # Check whether search has progressed by a minimum step request
             # WARNING - CHECK WHETHER THE NEXT LINE WORKS PROPERLY (SHOULD CALL OVERRIDDEN STATIC METHOD)
             if not self.__class__.progress_measure(prev_sol, self.curr_sol):
                 iters_no_progress = iters_no_progress + 1
                 if iters_no_progress > self.max_loops:
                     print('Terminating after iteration number ', it, ' because the algorithm hasn''t progressed in ', iters_no_progress, ' iterations-')
-                    return self.search_history, 'no progress', it
+                    return self.search_history, 'no progress', it, self.global_best_sol
             else:
                 iters_no_progress = 0
-            s2 = time.time()
-            print("Time needed for checking whether search stagnates: ", s2 - s1)
 
-            total_time_2 = time.time()
-            print("TOTAL ITERATION TIME: ", total_time_2 -total_time)
-            all_iters_time.append(total_time_2-total_time)
-            print("-------------------------------------------------------------------------")
-            if verbose is True:
-                print("----------------------------------------------------------")
-                print("Iteration number = ", it)
-                print("Previous solution, decision variables = ", ["%.3f" % i for i in prev_sol.x])
-                print("Previous solution, objectives = ", ["%.3f" % i for i in prev_sol.y])
-                print("Current solution, decision variables = ", ["%.3f" % i for i in self.curr_sol.x])
-                print("Current solution, objectives = ", ["%.3f" %i for i in self.curr_sol.y])
-                # print("First 5 elements of Tabu list = ",  self.tabu_list[:5])
-                # print("Last 5 elements of Tabu list = ",  self.tabu_list[-5:])
-                print("----------------------------------------------------------")
 
         print('Terminating because max iterations were exceeded, it = ', it)
-        print('AVERAGE ITERATION TIME: ', sum(all_iters_time)/len(all_iters_time))
-        return self.search_history, "max iter exceeded", it
+        return self.search_history, "max iter exceeded", it, self.global_best_sol
 
     # abstract method, must be overridden
     @staticmethod
@@ -133,3 +80,6 @@ class TabuSearch(SearchAlgorithm):
         raise AbstractMethod("Error! Method is abstract and has not been overridden by child class!")
 
 
+    @staticmethod
+    def compute_fitness(sol):
+        raise AbstractMethod("Error! Method is abstract and has not been overriden by child class!")

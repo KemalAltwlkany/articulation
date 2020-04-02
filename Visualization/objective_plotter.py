@@ -617,11 +617,11 @@ def OSY():
 
 
 if __name__ == '__main__':
-    BK1()
+    # BK1()
     # IM1()
     # SCH1()
     # FON()
-    # TNK()
+    TNK()
     # OSY()
     # comet_problem()
     # a3()

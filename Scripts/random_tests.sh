@@ -2,8 +2,8 @@
 
 cd ../Tests
 
-declare -a names=("SCH1")
-for seed in {0..8}
+declare -a names=("TNK")
+for seed in 100 120 140 160 180 200
 do
 	for i in "${names[@]}"
 	do

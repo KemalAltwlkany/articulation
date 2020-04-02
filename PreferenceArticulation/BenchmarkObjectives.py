@@ -94,3 +94,19 @@ class MOO_Problem:
             sum2 = sum2 - math.pow(x[i] + 1./math.sqrt(n), 2)
         return [1 - math.exp(sum1), 1 - math.exp(sum2)]
 
+    @staticmethod
+    def TNK(x):
+        """
+        I've found about the paper:
+        "K. Deb, A. Pratap, T. Meyarivan - Constrained Test Problems for Multi-objective Evolutionary Optimization"
+        It can be found on pages 3 and 4. The problem definition however contains a mistake in this paper.
+        The problem can be originally found in the work of:
+        "Tanaka - GA-based decision support system for multicriteria optimization"
+        where it is introduced and written correctly. The mistake is in the atan(x2/x1) which in Deb's paper is written as
+        atan(x/y) by accident.
+        The problem is good, as the objective space is the same as the decision variable space. In Deb's paper some properties
+        about it are explained, such as where the Front lies and the non-convexity of the Pareto front.
+        :return:
+        """
+        return [x[0], x[1]]
+
