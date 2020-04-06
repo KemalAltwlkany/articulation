@@ -106,3 +106,20 @@ def TNK_constraint_1(x):
 def TNK_constraint_2(x):
     return math.pow(x[0] - 0.5, 2) + math.pow(x[1] - 0.5, 2) - 0.5
 
+def OSY_constraint_1(x):
+    return x[0] + x[1] - 2
+
+def OSY_constraint_2(x):
+    return 6 - x[0] - x[1]
+
+def OSY_constraint_3(x):
+    return 2 + x[0] - x[1]
+
+def OSY_constraint_4(x):
+    return 2 - x[0] + 3*x[1]
+
+def OSY_constraint_5(x):
+    return 4 - math.pow(x[2] - 3, 2) - x[3]
+
+def OSY_constraint_6(x):
+    return math.pow(x[4] - 3, 2) + x[5] - 4

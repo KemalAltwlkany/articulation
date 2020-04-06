@@ -315,7 +315,7 @@ def TS_SCH1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False)
     else:
         # Boundaries for problem SCH1 are x1 € [-10, 10]
         random.seed(seed_val)
-        init_sol = Solution([random.uniform(0, 2)])
+        init_sol = Solution([random.uniform(-10, 10)])
         delta = 0.01
         max_iter = 500
         max_loops = 15
@@ -371,8 +371,8 @@ def TS_SCH1_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False)
     plt.title('Search history, Tabu Search, SCH1 ' + w_str)
     plt.xlabel('f1(x1, x2)')
     plt.ylabel('f2(x1, x2)')
-    plt.xlim(0, 6)
-    plt.ylim(0, 6)
+    plt.xlim(0, 60)
+    plt.ylim(0, 60)
     plt.grid(True)
 
     # export data to json/txt in order to generate reports
@@ -444,7 +444,7 @@ def TS_FON_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
 
     # plotting the objective space and the results (search history, etc...)
     global fig_num
-    x_space = np.linspace(-4, 4, 100)  # same for all variables xi, for i=1,...,n
+    x_space = np.linspace(-4, 4, 50)  # same for all variables xi, for i=1,...,n
     f1 = []
     f2 = []
     p = 1./math.sqrt(3.)
@@ -459,7 +459,7 @@ def TS_FON_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
     plt.scatter(f1, f2, s=1.0, color='dodgerblue')
 
     # second part plots the Pareto front of the problem
-    x_space = np.linspace(-p, p, 100)
+    x_space = np.linspace(-p, p, 50)
     f1 = []
     f2 = []
     for x1 in x_space:
@@ -521,8 +521,9 @@ def TS_FON_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
     # plt.show()
     fig_num = fig_num + 1
 
-#NEED TO FIX THIS
 
+# NOTE - For TNK I did not add any manual/standard tests. The reason is the complexity of determining
+# whether the initial solutions are correct. I can add this later if required.
 def TS_TNK_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
     init_sol = delta = max_iter = M = tabu_list_max_length = weights = max_loops = min_progress = description = None
     # description not used for now.
@@ -553,7 +554,7 @@ def TS_TNK_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
                 break
         init_sol = Solution([x1_init, x2_init])
         delta = 0.01
-        max_iter = 200
+        max_iter = 500
         max_loops = 25
         min_progress = 0.0001
         tabu_list_max_length = 30
@@ -684,6 +685,186 @@ def TS_TNK_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
     fig_num = fig_num + 1
 
 
+# CONSTRAINTS ARE PROBABLY WRONG.
+def TS_OSY_core(manual=False, std_ID=None, seed_val=0, toPlot=True, save=False):
+    init_sol = delta = max_iter = M = tabu_list_max_length = weights = max_loops = min_progress = description = None
+    # description not used for now.
+    # Setting up the algorithm parameters
+    if manual is True:
+        # read the standard test setup from file
+        # /Articulation/Tests/standardized_tests/TS/OSY/standard_i.txt, where i is = std_ID
+        # load the json formatted dataa into a dictionary
+        # Get the data from the the function load_standardized_test
+        f_name = "/home/kemal/Programming/Python/Articulation/Tests/standardized_tests/TS/OSY/standard_" + str(std_ID) + ".txt"
+        init_sol_x_vect, delta, max_iter, M, tabu_list_max_length, weights, max_loops, min_progress, description = load_standardized_test(f_name)
+        init_sol = Solution(init_sol_x_vect)
+    else:
+        x_tmp = []
+        while(1):
+            x_tmp = [random.uniform(0, 10), random.uniform(0, 10), random.uniform(1, 5), random.uniform(0, 6), random.uniform(1, 5), random.uniform(0, 10)]
+            if OSY_constraint_1(x_tmp) > 0 and OSY_constraint_2(x_tmp) > 0 and OSY_constraint_3(x_tmp) > 0 and OSY_constraint_4(x_tmp) > 0 and OSY_constraint_5(x_tmp) > 0 and OSY_constraint_6(x_tmp) > 0:
+                break
+        print('found initial point')
+        # Boundaries for problem OSY are x1,2,6 € [0, 10], x3,5 € [1, 5], x4 € [0, 6]
+        random.seed(seed_val)
+        init_sol = Solution(x_tmp)
+        delta = 0.02
+        max_iter = 100
+        max_loops = 20
+        min_progress = 0.001
+        tabu_list_max_length = 20
+        M = 2000
+        # random weights
+        a = round(random.uniform(0, 1), 2)
+        weights = [a, round(1 - a, 2)]
+
+    problem = MOO_Problem.OSY
+    const0 = BoundaryConstraint([(0, 10), (0, 10), (1, 5), (0, 6), (1, 5), (0, 10)])
+    const1 = GreaterThanConstraint(OSY_constraint_1)
+    const2 = GreaterThanConstraint(OSY_constraint_2)
+    const3 = GreaterThanConstraint(OSY_constraint_3)
+    const4 = GreaterThanConstraint(OSY_constraint_4)
+    const5 = GreaterThanConstraint(OSY_constraint_5)
+    const6 = GreaterThanConstraint(OSY_constraint_6)
+    constraints = [const0, const1, const2, const3, const4, const5, const6]
+
+
+    search_alg = TabuSearchApriori(init_sol=init_sol, problem=problem, delta=delta, max_iter=max_iter,
+                                   constraints=constraints, M=M, tabu_list_max_length=tabu_list_max_length,
+                                   weights=weights, n_objectives=2, max_loops=max_loops, min_progress=min_progress)
+
+    # running Tabu Search on MOO Problem OSY
+    search_history, termination_reason, last_iter, glob_sol = search_alg.search()
+    final_sol = glob_sol
+    print('Final solution is: ', final_sol)
+
+    # plotting the objective space and the results (search history, etc...)
+    global fig_num
+    f1 = []
+    f2 = []
+    random.seed(0)
+    while len(f1) < 1e5:    # 100k sample points
+        x1 = random.uniform(0, 10)
+        x2 = random.uniform(0, 10)
+        x3 = random.uniform(1, 5)
+        x4 = random.uniform(0, 6)
+        x5 = random.uniform(0, 5)
+        x6 = random.uniform(0, 10)
+        if x1 + x2 - 2 < 0:
+            continue
+        if 6 - x1 - x2 < 0:
+            continue
+        if 2 + x1 - x2 < 0:
+            continue
+        if 2 - x1 + 3 * x2 < 0:
+            continue
+        if 4 - math.pow(x3 - 3, 2) - x4 < 0:
+            continue
+        if math.pow(x5 - 3, 2) + x6 - 4 < 0:
+            continue
+        f1.append(
+            -25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - math.pow(x4 - 4, 2) - math.pow(
+                x5 - 1, 2))
+        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x4 ** 2 + x5 ** 2 + x6 ** 2)
+
+    plt.figure()
+    plt.scatter(f1, f2, s=1.0, color='dodgerblue')
+
+
+    # second part plots the Pareto front of the problem
+    f1 = []
+    f2 = []
+    x4, x6 = 0, 0
+    # region AB
+    x1, x2, x5 = 5, 1, 5
+    x3_space = np.linspace(1, 5, 100)
+    for x3 in x3_space:
+        f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
+        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
+
+    # region BC
+    x1, x2, x5 = 5, 1, 1
+    x3_space = np.linspace(1, 5, 100)
+    for x3 in x3_space:
+        f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
+        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
+
+    # region CD
+    x1_space = np.linspace(4.056, 5, 50)
+    x3, x5 = 1, 1
+    for x1 in x1_space:
+        x2 = (x1 - 2.) / 3.
+        f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
+        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
+
+    # region DE
+    x1, x2, x5 = 0, 2, 1
+    x3_space = np.linspace(1, 3.732, 100)
+    for x3 in x3_space:
+        f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
+        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
+
+    # region EF
+    x1_space = np.linspace(0, 1, 50)
+    x3, x5 = 1, 1
+    for x1 in x1_space:
+        x2 = 2 - x1
+        f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
+        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
+
+    plt.scatter(f1, f2, linewidth=3.5, linestyle='-', color='navy')
+
+    # plotting the search history
+    f1 = []
+    f2 = []
+    for sol in search_history:
+        f1.append(sol.y[0])
+        f2.append(sol.y[1])
+    plt.plot(f1, f2, linewidth=3.5, linestyle='-', color='red')
+    plt.plot([f1[0]], [f2[0]], marker=">", markersize=15, color='darkgreen')  # starting position (init sol)
+    plt.plot([f1[-1]], [f2[-1]], marker="s", markersize=15, color='darkgreen')  # final position (final sol)
+    plt.plot(final_sol.y[0], final_sol.y[1], marker="*", markersize=15, color='gold')
+    # add some plot labels
+    # To every title I append the weights information as well, so firstly lets convert that to a string
+    w_str = 'w=[' + str(weights[0]) + ", " + str(weights[1]) + "]"
+    plt.title('Search history, Tabu Search, OSY ' + w_str)
+    plt.xlabel('f1(x1, x2, x3, x4, x5, x6)')
+    plt.ylabel('f2(x1, x2, x3, x4, x5, x6)')
+    plt.xlim(-300, 0)
+    plt.ylim(0, 80)
+    plt.grid(True)
+
+    # export data to json/txt in order to generate reports
+    if save is True:
+        # SAVE PROCEDURE
+        # 1.) Navigate to appropriate test folder
+        # 2.) Check number of files. Every test generates 2 files, .txt and .png. The test ID is equal to n_files / 2
+        # 3.) Save the plot
+        # 4.) Save the test data in json format to txt file
+
+        folder = "/home/kemal/Programming/Python/Articulation/Tests/test_results_raw/TS/TS_apriori/OSY"
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+        try:
+            os.chdir(folder)
+        except OSError:
+            print('Could not cwd to: ', folder)
+            print('Exiting with status flag 83.')
+            sys.exit(83)
+
+        entries = os.listdir(folder)
+        test_ID = len(entries) // 2
+        file_name = "OSY_test_ID_" + str(test_ID)
+        plt.savefig(file_name + '.png')
+        save_test_to_file_vol(init_sol=init_sol, delta=delta, max_iter=max_iter, M=M, tabu_list_max_length=tabu_list_max_length,
+                          weights=weights, max_loops=max_loops, min_progress=min_progress, final_sol=final_sol, seed_val=seed_val,
+                          termination_reason=termination_reason, last_iter=last_iter, file_name=file_name)
+    # plt.show()
+    fig_num = fig_num + 1
+
+
+
 
 def main():
     args = copy.deepcopy(sys.argv[1:])  # the 0-th argument is the name of the file passed as argument
@@ -727,6 +908,8 @@ def main():
         TS_FON_core(manual=man, std_ID=std_ID_, seed_val=seed_val_, toPlot=True, save=save)
     elif prob == 'TNK':
         TS_TNK_core(manual=man, std_ID=std_ID_, seed_val=seed_val_, toPlot=True, save=save)
+    elif prob == 'OSY':
+        TS_OSY_core(manual=man, std_ID=std_ID_, seed_val=seed_val_, toPlot=True, save=save)
     else:
         print('Error! Did not find benchmark problem name! Exiting with value 10.')
         sys.exit(10)

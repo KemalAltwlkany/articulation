@@ -9,7 +9,7 @@ verify_ssl = true
 numpy = "*"
 matplotlib = "*"
 plotly = "*"
-
+pylint = "*"
 
 [requires]
 python_version = "3.7"

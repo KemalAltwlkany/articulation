@@ -110,3 +110,18 @@ class MOO_Problem:
         """
         return [x[0], x[1]]
 
+    @staticmethod
+    def OSY(x):
+        """
+        From paper:
+        "K. Deb, A. Pratap, T. Meyarivan - Constrained Test Problems for Multi-objective Evolutionary Optimization"
+        On page 4, the OSY problem is introduced, which is orignally presented in paper:
+        "Osyczka A., Kundu S. (1995) -  A new method to solve generalized multicriteria optimization problems using the simple genetic algorithm."
+        The problem is very interesting, since it is nonlinear and has 6 decision variables, 2 objectives and a non
+        convex Pareto front.
+        Deb explains within detail how to obtain the Pareto front of this problem.
+        :return:
+        """
+        f1 = -25 * math.pow(x[0] - 2, 2) - math.pow(x[1] - 2, 2) - math.pow(x[2] - 1, 2) - math.pow(x[3] - 4, 2) - math.pow(x[4] - 1, 2)
+        f2 = math.pow(x[0], 2) + math.pow(x[1], 2) + math.pow(x[2], 2) + math.pow(x[3], 2) + math.pow(x[4], 2) + math.pow(x[5], 2)
+        return [f1, f2]

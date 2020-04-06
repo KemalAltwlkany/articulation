@@ -529,7 +529,7 @@ def OSY():
     f1 = []
     f2 = []
     random.seed(0)
-    while len(f1) < 5*1e5:
+    while len(f1) < 5*1e4:
         x1 = random.uniform(0, 10)
         x2 = random.uniform(0, 10)
         x3 = random.uniform(1, 5)
@@ -621,7 +621,7 @@ if __name__ == '__main__':
     # IM1()
     # SCH1()
     # FON()
-    TNK()
-    # OSY()
+    #TNK()
+    OSY()
     # comet_problem()
     # a3()
