@@ -11,16 +11,13 @@ import json as json
 import numpy as np
 import matplotlib.pyplot as plt
 import random as random
-import math as math
 
 # my modules
 sys.path.insert(0, "/home/kemal/Programming/Python/Articulation")
-from PreferenceArticulation.Solution import Solution
-from PreferenceArticulation.BenchmarkObjectives import MOO_Problem
-from PreferenceArticulation.Constraints import *
-from TabuSearch.TS_apriori import TabuSearchApriori
-from LocalSearch.LS_apriori import LocalSearchApriori
-
+from src.PreferenceArticulation.Solution import Solution
+from src.PreferenceArticulation.BenchmarkObjectives import MOO_Problem
+from src.PreferenceArticulation.Constraints import *
+from src.TabuSearch.TS_apriori import TabuSearchApriori
 
 fig_num = 1
 

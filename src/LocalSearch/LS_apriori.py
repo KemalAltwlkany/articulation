@@ -1,4 +1,4 @@
-from LocalSearch.LS import LocalSearch
+from src.LocalSearch import LocalSearch
 
 
 class LocalSearchApriori(LocalSearch):

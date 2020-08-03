@@ -1,6 +1,7 @@
 /.idea
-/Tests/test_results_raw
-/TabuSearch/__pycache__
-/PreferenceArticulation/__pycache__
-/Tests/standardized_tests
+/src/Tests/test_results_raw
+/src/TabuSearch/__pycache__
+/src/PreferenceArticulation/__pycache__
+/src/Tests/standardized_tests
 /.vscode
+/src/__pycache__

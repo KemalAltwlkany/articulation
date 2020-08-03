@@ -1,8 +1,8 @@
-from TabuSearch.TS import TabuSearch
+from src.TabuSearch.TS import TabuSearch
 import math as math
 
 
-class TabuSearchApriori(TabuSearch):
+class TabuSearchAposteriori(TabuSearch):
 
     weights = [1, 1]
     n_objectives = 2
@@ -15,6 +15,7 @@ class TabuSearchApriori(TabuSearch):
         TabuSearchApriori.weights = weights
         TabuSearchApriori.n_objectives = n_objectives
         TabuSearchApriori.min_progress = min_progress
+
 
     def sort_neighborhood(self):
         self.neighborhood.sort(key=TabuSearchApriori.compute_fitness)

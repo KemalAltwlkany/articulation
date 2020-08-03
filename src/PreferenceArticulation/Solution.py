@@ -1,22 +1,32 @@
-import math as math
-
+import numpy as np
+from src.PreferenceArticulation.ArticulationExceptions import NotNumpyArray, InvalidComparison
 
 class Solution:
     """
     The solution class is a simple wrapper that contains information about the solution in the SearchSpace, i.e. the
     vector of parameters (x), and the vector of evaluated objective functions (y) for that solution.
+    Both attributes x and y are of type np.ndarray.
     """
-    eps = 0.0001
+    eps = 0.00001
 
-    def __init__(self, x):
+    def __init__(self, x=None):
+        if x is None:
+            x = []
         self.x = x
         self.y = []
 
     def set_x(self, x):
-        self.x = x
+        if isinstance(x, np.ndarray):
+            self.x = x
+        else:
+            raise NotNumpyArray('Attempted to assign value to Solution.x which is not of type np.ndarray')
 
     def set_y(self, y):
-        self.y = y
+        if isinstance(y, np.ndarray):
+            self.y = y
+        else:
+            raise NotNumpyArray('Attempted to assign value to Solution.y which is not of type np.ndarray')
+
 
     def __eq__(self, other):
         """
@@ -24,14 +34,17 @@ class Solution:
         no need for checking the y vectors as well, since there is a many-to-one mapping.
         "Roughly the same" is defined by class static attribute Solution.eps which defines the relative
         and absolute tolerance allowed between individual coordinates.
+
+        Testing for equality is done using numpys built-in function "isclose" which returns the boolean of the following
+        expression:
+        absolute(a - b) <= (atol + rtol * absolute(b))
         """
         if isinstance(other, Solution):
-            for i, j in zip(self.x, other.x):
-                if math.isclose(i, j, rel_tol=Solution.eps, abs_tol=Solution.eps):
-                    continue
-                else:
-                    return False
-        return True
+            equalities = np.isclose(self.x, other.x, rtol=Solution.eps, atol=Solution.eps)
+            return np.all(equalities)
+        else:
+            raise InvalidComparison('Attempted to compare instance with nonSolution instance.')
+
 
     def __ne__(self, other):
         return not self.__eq__(other)

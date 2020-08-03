@@ -4,7 +4,6 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from PreferenceArticulation.BenchmarkObjectives import *
 
 
 def bi_objective_scatter_plot(f1, f2, x, title="sample", xlabel=None, ylabel=None, ):

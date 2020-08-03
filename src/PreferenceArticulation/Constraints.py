@@ -1,4 +1,4 @@
-from PreferenceArticulation.ArticulationExceptions import AbstractMethod
+from src.PreferenceArticulation.ArticulationExceptions import AbstractMethod
 import math as math
 
 

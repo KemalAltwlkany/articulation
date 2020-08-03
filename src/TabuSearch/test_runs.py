@@ -3,9 +3,9 @@ import sys as sys
 sys.path.insert(0, "/home/kemal/Programming/Python/Articulation")
 print(sys.path)
 
-from TabuSearch.TS_apriori import TabuSearchApriori
-from PreferenceArticulation.Solution import Solution
-from PreferenceArticulation.BenchmarkObjectives import MOO_Problem
+from src.TabuSearch.TS_apriori import TabuSearchApriori
+from src.PreferenceArticulation.Solution import Solution
+from src.PreferenceArticulation.BenchmarkObjectives import MOO_Problem
 import numpy as np
 import matplotlib.pyplot as plt
 import random as random
@@ -13,7 +13,7 @@ import math as math
 import json as json
 import os as os
 from datetime import datetime
-from PreferenceArticulation.Constraints import BoundaryConstraint
+from src.PreferenceArticulation.Constraints import BoundaryConstraint
 import time as time
 import gc as gc
 
