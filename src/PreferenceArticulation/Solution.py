@@ -14,6 +14,7 @@ class Solution:
             x = []
         self.x = x
         self.y = []
+        self.val = None
 
     def set_x(self, x):
         if isinstance(x, np.ndarray):
@@ -27,6 +28,17 @@ class Solution:
         else:
             raise NotNumpyArray('Attempted to assign value to Solution.y which is not of type np.ndarray')
 
+    def set_val(self, val):
+        self.val = val
+
+    def get_x(self):
+        return self.x
+
+    def get_y(self):
+        return self.y
+
+    def get_val(self):
+        return self.val
 
     def __eq__(self, other):
         """
@@ -45,16 +57,11 @@ class Solution:
         else:
             raise InvalidComparison('Attempted to compare instance with nonSolution instance.')
 
-
     def __ne__(self, other):
         return not self.__eq__(other)
 
-
-
     def __str__(self) -> str:
         s = "x=["
-        # s = s + str(len(self.x)) + "\n"
-        # s = s + str(len(self.y)) + "\n"
         for xi in self.x:
             s = s + str(xi) + ", "
         s = s + "]\ny=["
@@ -62,26 +69,4 @@ class Solution:
             s = s + str(yi) + ", "
         s = s + "]"
         return s
-
-    # old version of str(Solution)
-    # def __str__(self):
-    #     str_ = "\n------ Class solution -------\n"
-    #     str_ = str_ + "Decision variables: ["
-    #     for ind, xi in enumerate(self.x):
-    #         if ind is not len(self.x)-1:
-    #             str_ = str_ + str(xi) + ", "
-    #         else:
-    #             str_ = str_ + str(xi) + "]"
-    #
-    #     str_ = str_ + "\nObjectives values: ["
-    #     for ind, yi in enumerate(self.y):
-    #         if ind is not len(self.y)-1:
-    #             str_ = str_ + "f" + str(ind+1) + "=" + str(yi) + ", "
-    #         else:
-    #             str_ = str_ + "f" + str(ind+1) + "=" + str(yi) + "]"
-    #     str_ = str_ + "\n------ ------------- -------"
-    #     return str_
-
-
-
 

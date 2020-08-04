@@ -1,8 +1,12 @@
-import numpy as np
+def funn(k1=None, k2='fun', k3='run'):
+    print('Sta ima ')
+    print(k1)
+    print(k2)
+    print(k3)
 
-x1 = np.arange(9).reshape((3, 3))
-x2 = np.arange(3)
-print(x1)
-print(x2)
-print(np.add(x1, x2, x1))
-print(x1)
+
+d = dict( k2='zasto', k3='dince')
+
+funn(**d)
+
+

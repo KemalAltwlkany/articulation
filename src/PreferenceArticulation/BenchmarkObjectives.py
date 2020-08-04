@@ -1,12 +1,11 @@
 import math as math
-
+import numpy as np
 
 class MOO_Problem:
     """
     Class is never to be instantiated in the first place, its just a wrapper to keep all the benchmark functions used
     in one nice class, which should be used as static functions.
     """
-
 
     @staticmethod
     def BK1(x):
@@ -31,8 +30,8 @@ class MOO_Problem:
         :return: a 2 element list, containing the evaluated objectives; f1, f2 respectively.
         """
         f1 = x[0]**2 + x[1]**2
-        f2 = (x[0] -5)**2 + (x[1] - 5)**2
-        return [f1, f2]
+        f2 = (x[0] - 5)**2 + (x[1] - 5)**2
+        return np.array([f1, f2])
 
     @staticmethod
     def IM1(x):
@@ -125,3 +124,17 @@ class MOO_Problem:
         f1 = -25 * math.pow(x[0] - 2, 2) - math.pow(x[1] - 2, 2) - math.pow(x[2] - 1, 2) - math.pow(x[3] - 4, 2) - math.pow(x[4] - 1, 2)
         f2 = math.pow(x[0], 2) + math.pow(x[1], 2) + math.pow(x[2], 2) + math.pow(x[3], 2) + math.pow(x[4], 2) + math.pow(x[5], 2)
         return [f1, f2]
+
+
+class MOO_Constraints:
+    @staticmethod
+    def BK1_constraint(x):
+        """
+        x1 € [-5, 10]
+        x2 € [-5, 10]
+        :param x: np.ndarray
+        :return: <int> number of constraints violated
+        """
+        return np.count_nonzero((x < -5) | (x > 10))
+
+

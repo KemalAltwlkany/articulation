@@ -18,7 +18,7 @@ class TabuSearchAposteriori(TabuSearch):
 
 
     def sort_neighborhood(self):
-        self.neighborhood.sort(key=TabuSearchApriori.compute_fitness)
+        self.neighborhood_x_vector.sort(key=TabuSearchApriori.compute_fitness)
 
     @staticmethod
     def compute_fitness(sol):
