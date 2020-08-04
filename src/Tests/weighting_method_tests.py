@@ -2,12 +2,21 @@ import numpy as np
 from src.PreferenceArticulation.Solution import Solution
 from src.PreferenceArticulation.BenchmarkObjectives import *
 from src.TabuSearch.weighting_method import AposterioriWeightingMethod
+import plotly.graph_objects as go
 
 
 
 def plot_BK1():
-
-
+    x1_range = np.linspace(-5, 10, 300)
+    x2_range = np.linspace(-5, 10, 300)
+    x1, x2 = np.meshgrid(x1_range, x2_range)
+    f1 = x1**2 + x2**2
+    f2 = (x1-5)**2 + (x2-5)**2
+    f1 = np.reshape(f1, f1.size)
+    f2 = np.reshape(f2, f2.size)
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=f1, y=f2, mode='markers'))
+    fig.show()
 
 def example_1():
     params = dict(
@@ -36,5 +45,6 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    #main()
+    plot_BK1()
 
