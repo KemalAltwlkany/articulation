@@ -113,17 +113,14 @@ class TabuSearch:
             # Maximum iterations exceeded?
             if it > self.max_iter:
                 print('Terminating because max iterations were exceeded, it = ', it)
-                return self.search_history, "max iter exceeded", it, self.global_best_sol
+                return_dict = dict(search_history=self.search_history, termination_reason='max iter exceeded', last_iter=it, global_best_sol=self.global_best_sol)
+                return return_dict
 
             # No progress made for max_loops iterations already?
             if it - last_global_sol_improvement > self.max_loops:
                 print('Terminating after iteration number ', it, ' because the algorithm hasn''t progressed in ', it - last_global_sol_improvement, ' iterations')
-                return self.search_history, 'no progress', it, self.global_best_sol
-
-
-
-
-
+                return_dict = dict(search_history=self.search_history, termination_reason='no progress', last_iter=it, global_best_sol=self.global_best_sol)
+                return return_dict
 
 #
 # class TabuSearch(SearchAlgorithm):
