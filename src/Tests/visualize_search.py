@@ -4,7 +4,6 @@ from src.PreferenceArticulation.BenchmarkObjectives import *
 from src.TabuSearch.weighting_method import AposterioriWeightingMethod
 import plotly.graph_objects as go
 
-
 def plot_BK1_objective_space(n_samples=100, show=True):
     # The objective space - a few samples
     x1_range = np.linspace(-5, 10, n_samples)
