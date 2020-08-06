@@ -47,6 +47,21 @@ def main():
     group2.add_argument("--FON", help='Test problem FON.', action='store_true')
     group2.add_argument("--SCH1", help='Test problem SCH1.', action='store_true')
 
+    parser.add_argument("--seed", default=0, help="Random seed value.", type=int)
+    parser.add_argument("--step_size", default=0.5, help="Step size.", type=float)
+    parser.add_argument("--neighborhood_size", default=20, help="Neighborhood size.", type=int)
+    parser.add_argument("--TL_len", default=25, help="Tabu list length", type=int)
+    parser.add_argument("--max_iter", default=1000, help="Maximum iterations.", type=int)
+    parser.add_argument("--max_loops", default=150, help="Maximum loops with no progress.", type=int)
+    parser.add_argument("--M", default=100, help="Penalty value for violated constraints.", type=int)
+    parser.add_argument("--nObj", default=2, help="Number of objectives-", type=int)
+    parser.add_argument("--nAlt", default=2, help="Number of search space alternatives.", type=int)
+    parser.add_argument("--save", default=True, help="Specifies whether test results should be saved.", type=bool)
+
+
+    # Specific and longer parameters
+    parser.add_argument("--load_params", default=False, help="Defines whether to load algorithm parameters.", type=bool)
+
     
 
     #parser.add_argument("preference_type", help='Type of preference articulation used', type=str)

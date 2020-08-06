@@ -4,6 +4,7 @@ import numpy as np
 from src.PreferenceArticulation.Solution import Solution
 import os as os
 import pickle as pickle
+import time as time
 
 
 class TabuSearch:
@@ -38,6 +39,9 @@ class TabuSearch:
         self.save = save
         self.save_options = save_options
 
+        # for measuring time elapsed.
+        self.time_elapsed = None
+
     # abstract
     def evaluate_solution(self, sol):
         raise AbstractMethod("Error! Method is abstract and has not been overridden by child class!")
@@ -65,6 +69,7 @@ class TabuSearch:
         np.add(self.neighborhood_x_vector, self.curr_sol.get_x(), self.neighborhood_x_vector)
 
     def search(self):
+        start = time.process_time()
         # Evaluate initial solution.
         self.curr_sol = copy.deepcopy(self.init_sol)
         self.evaluate_objectives(self.curr_sol)
@@ -115,7 +120,11 @@ class TabuSearch:
 
             # Maximum iterations exceeded?
             if it > self.max_iter:
+                self.time_elapsed = time.process_time() - start
+                print("-------------------------------------------------------------------")
                 print('Terminating because max iterations were exceeded, it = ', it)
+                print('Time elapsed: ', self.time_elapsed)
+                print("-------------------------------------------------------------------")
                 if self.save is True:
                     self.save_search_results()
                 return_dict = dict(search_history=self.search_history, termination_reason='max iter exceeded', last_iter=it, global_best_sol=self.global_best_sol)
@@ -123,7 +132,11 @@ class TabuSearch:
 
             # No progress made for max_loops iterations already?
             if it - last_global_sol_improvement > self.max_loops:
+                self.time_elapsed = time.process_time() - start
+                print("-------------------------------------------------------------------")
                 print('Terminating after iteration number ', it, ' because the algorithm hasn''t progressed in ', it - last_global_sol_improvement, ' iterations')
+                print('Time elapsed: ', self.time_elapsed)
+                print("-------------------------------------------------------------------")
                 if self.save is True:
                     self.save_search_results()
                 return_dict = dict(search_history=self.search_history, termination_reason='no progress', last_iter=it, global_best_sol=self.global_best_sol)
@@ -140,9 +153,6 @@ class TabuSearch:
         with open(self.save_options['filename'], 'wb') as f:
             pickle.dump(all_info, f, pickle.HIGHEST_PROTOCOL)
         os.chdir(cwd)
-
-
-
 
 
 
