@@ -1,6 +1,7 @@
 import numpy as np
 import sys as sys
 import os as os
+import random as random
 
 sys.path.insert(0, "/home/kemal/Programming/Python/Articulation")
 from src.PreferenceArticulation.Solution import Solution
@@ -38,6 +39,10 @@ def main():
         params['save_options'] = save_options
         params['seed_value'] = i
         params['test_ID'] = 'BK1_test_' + str(i+1)
+        random.seed(i)
+        a = random.random()
+        params['weights'] = [a, 1-a]
+        params['init_sol'] = Solution(np.array([random.uniform(-5, 10), random.uniform(-5, 10)]))
         BK1_test(params)
 
 

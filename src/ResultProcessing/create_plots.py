@@ -1,9 +1,6 @@
 import os as os
-import numpy as np
 import pickle as pickle
-from src.PreferenceArticulation.Solution import Solution
 from src.PreferenceArticulation.BenchmarkObjectives import *
-from src.TabuSearch.weighting_method import AposterioriWeightingMethod
 import plotly.graph_objects as go
 
 
@@ -80,36 +77,7 @@ def plot_search_results(func, search_results, title='Test', x_label='x', y_label
     # fig.add_trace(go.Scatter(x=))
 
 
-def example_1():
-    params = dict(
-        init_sol=Solution(np.array([9, 9])),
-        problem=MOO_Problem.BK1,
-        constraints=[MOO_Constraints.BK1_constraint],
-        step_size=0.05,
-        neighborhood_size=15,
-        max_iter=2000,
-        M=100,
-        tabu_list_max_length=20,
-        max_loops=100,
-        search_space_dimensions=2,
-        objective_space_dimensions=2,
-        weights=[0.5, 0.5]
-    )
-    SearchInstance = AposterioriWeightingMethod(**params)
-    result_ = SearchInstance.search()
-    # arr = np.array([i.get_y() for i in result['search_history']])
-    # print(arr)
-    # print(arr.shape)
-    # print(arr[0])
-    # print(arr[:, 0])
-    return result_
-
-
-def main():
-    return example_1()
-
-
-def create_plots(articulation_type, benchmark_problem, func, n_samples=50, x_label='f1(x1, x2)', y_label='f2(x1, x2)'):
+def create_plots(articulation_type, benchmark_problem, func, extension='.png', n_samples=50, x_label='f1(x1, x2)', y_label='f2(x1, x2)'):
     # load pickled dictionaries into list of dictionaries
     load_path = '/home/kemal/Programming/Python/Articulation/data/pickles/' + articulation_type + '/' + benchmark_problem + '/'
     os.chdir(load_path)
@@ -137,7 +105,7 @@ def create_plots(articulation_type, benchmark_problem, func, n_samples=50, x_lab
         )
         save_options = dict(
             path=save_path,
-            name=str(d['test_ID']+'.png')
+            name=str(d['test_ID'] + extension)
         )
         plot_search_results(func, search_results, title=str(name_mappings[articulation_type] + ' ' + benchmark_problem),
                             x_label=x_label, y_label=y_label, n_samples=n_samples, show=False, save=True, save_options=save_options)
