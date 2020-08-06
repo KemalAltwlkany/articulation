@@ -10,6 +10,7 @@ numpy = "*"
 matplotlib = "*"
 plotly = "*"
 pylint = "*"
+kaleido = "*"
 
 [requires]
 python_version = "3.7"

@@ -8,13 +8,9 @@ from src.PreferenceArticulation.BenchmarkObjectives import *
 from src.TabuSearch.weighting_method import AposterioriWeightingMethod
 
 
-
-
 def BK1_test(params):
     SearchInstance = AposterioriWeightingMethod(**params)
     SearchInstance.search()
-
-
 
 
 def main():
@@ -34,17 +30,15 @@ def main():
         weights=[0.5, 0.5]
     )
     save_options = dict(
-        path='/home/kemal/Programming/Python/Articulation/data/aposteriori/BK1',
+        path='/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/BK1/',
         filename=''
     )
     for i in range(20):
         save_options['filename'] = 'BK1_test_' + str(i+1) + '.pickle'
         params['save_options'] = save_options
+        params['seed_value'] = i
+        params['test_ID'] = 'BK1_test_' + str(i+1)
         BK1_test(params)
-
-
-
-
 
 
 if __name__ == '__main__':

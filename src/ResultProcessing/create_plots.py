@@ -1,8 +1,11 @@
+import os as os
 import numpy as np
+import pickle as pickle
 from src.PreferenceArticulation.Solution import Solution
 from src.PreferenceArticulation.BenchmarkObjectives import *
 from src.TabuSearch.weighting_method import AposterioriWeightingMethod
 import plotly.graph_objects as go
+
 
 def plot_BK1_objective_space(n_samples=100, show=True):
     # The objective space - a few samples
@@ -33,7 +36,7 @@ def plot_BK1_objective_space(n_samples=100, show=True):
     return fig
 
 
-def plot_search_results(func, search_results, title='Test', x_label='x', y_label='y', n_samples=50, show=False, save=False):
+def plot_search_results(func, search_results, title='Test', x_label='x', y_label='y', n_samples=50, show=False, save=False, save_options=None):
     # plot a few samples of the objective space and the Pareto front
     fig = func(n_samples=n_samples, show=show)
 
@@ -70,6 +73,10 @@ def plot_search_results(func, search_results, title='Test', x_label='x', y_label
 
     if show is True:
         fig.show()
+
+    if save is True:
+        os.chdir(save_options['path'])
+        fig.write_image(save_options['path'] + save_options['name'])
     # fig.add_trace(go.Scatter(x=))
 
 
@@ -102,7 +109,40 @@ def main():
     return example_1()
 
 
+def create_plots(articulation_type, benchmark_problem, func, n_samples=50, x_label='f1(x1, x2)', y_label='f2(x1, x2)'):
+    # load pickled dictionaries into list of dictionaries
+    load_path = '/home/kemal/Programming/Python/Articulation/data/pickles/' + articulation_type + '/' + benchmark_problem + '/'
+    os.chdir(load_path)
+    file_names = os.listdir()
+    dicts = []
+    for p in file_names:
+        file = open(load_path + p, 'rb')
+        dicts.append(pickle.load(file))
+        file.close()
+
+    # Some mappings for pretty outputs
+    name_mappings = {
+        'aposteriori': 'A posteriori',
+        'progressive': 'Progressive',
+        'apriori': 'A priori'
+    }
+
+    save_path = '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/' + articulation_type + '/' + benchmark_problem + '/' + 'plots' + '/'
+
+    # create plots for every dictionary
+    for d in dicts:
+        search_results = dict(
+            search_history=d['search_history'],
+            global_best_sol=d['global_best_sol']
+        )
+        save_options = dict(
+            path=save_path,
+            name=str(d['test_ID']+'.png')
+        )
+        plot_search_results(func, search_results, title=str(name_mappings[articulation_type] + ' ' + benchmark_problem),
+                            x_label=x_label, y_label=y_label, n_samples=n_samples, show=False, save=True, save_options=save_options)
+
+
 if __name__ == '__main__':
-    result = main()
-    plot_search_results(func=plot_BK1_objective_space, search_results=result, title='Aposteriori TS, BK1',
-                        x_label='f1(x1, x2)', y_label='f2(x1, x2)')
+    create_plots('aposteriori', 'BK1', plot_BK1_objective_space)
+

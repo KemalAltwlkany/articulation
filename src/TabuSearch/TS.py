@@ -5,12 +5,12 @@ from src.PreferenceArticulation.Solution import Solution
 import os as os
 import pickle as pickle
 import time as time
-
+import random as random
 
 class TabuSearch:
     def __init__(self, init_sol=None, problem=None, constraints=None, step_size=None, neighborhood_size=None, max_iter=None, M=None,
                  tabu_list_max_length=None, max_loops=None, search_space_dimensions=None, objective_space_dimensions=None, save=False,
-                 save_options=None):
+                 save_options=None, seed_value=0, test_ID=None):
         # attributes necessary for the actual search
         self.init_sol = init_sol
         self.curr_sol = None
@@ -38,6 +38,10 @@ class TabuSearch:
         self.search_history = None
         self.save = save
         self.save_options = save_options
+        self.seed_value = seed_value
+        self.test_ID = test_ID
+        self.last_iter = 0
+        self.termination_reason = None
 
         # for measuring time elapsed.
         self.time_elapsed = None
@@ -69,11 +73,12 @@ class TabuSearch:
         np.add(self.neighborhood_x_vector, self.curr_sol.get_x(), self.neighborhood_x_vector)
 
     def search(self):
+        random.seed(self.seed_value)
         start = time.process_time()
-        # Evaluate initial solution.
+        # Evaluate initial solution.ž
+        self.evaluate_objectives(self.init_sol)
+        self.evaluate_solution(self.init_sol)
         self.curr_sol = copy.deepcopy(self.init_sol)
-        self.evaluate_objectives(self.curr_sol)
-        self.evaluate_solution(self.curr_sol)
         self.global_best_sol = copy.deepcopy(self.curr_sol)
 
         self.search_history = []
@@ -125,6 +130,8 @@ class TabuSearch:
                 print('Terminating because max iterations were exceeded, it = ', it)
                 print('Time elapsed: ', self.time_elapsed)
                 print("-------------------------------------------------------------------")
+                self.last_iter = it
+                self.termination_reason = 'Maximum iters exceeded.'
                 if self.save is True:
                     self.save_search_results()
                 return_dict = dict(search_history=self.search_history, termination_reason='max iter exceeded', last_iter=it, global_best_sol=self.global_best_sol)
@@ -137,6 +144,8 @@ class TabuSearch:
                 print('Terminating after iteration number ', it, ' because the algorithm hasn''t progressed in ', it - last_global_sol_improvement, ' iterations')
                 print('Time elapsed: ', self.time_elapsed)
                 print("-------------------------------------------------------------------")
+                self.last_iter = it
+                self.termination_reason = 'No performance improvement.'
                 if self.save is True:
                     self.save_search_results()
                 return_dict = dict(search_history=self.search_history, termination_reason='no progress', last_iter=it, global_best_sol=self.global_best_sol)
