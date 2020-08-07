@@ -19,7 +19,7 @@ class AposterioriWeightingMethod(TabuSearch):
 
     def evaluate_solution(self, sol):
         # In the weighting method, the solution is evaluated by creating a weighted sum of all objective values
-        sol.set_val(np.average(sol.get_y(), weights=self.weights)*self.sum_of_weights - self.penalty(sol))
+        sol.set_val(np.average(sol.get_y(), weights=self.weights)*self.sum_of_weights + self.penalty(sol))
 
 
 

@@ -7,6 +7,9 @@ import pickle as pickle
 import time as time
 import random as random
 
+# Consider setting np.random.seed() to seed_value and check for reproducibility of tests.
+
+
 class TabuSearch:
     def __init__(self, init_sol=None, problem=None, constraints=None, step_size=None, neighborhood_size=None, max_iter=None, M=None,
                  tabu_list_max_length=None, max_loops=None, search_space_dimensions=None, objective_space_dimensions=None, save=False,
@@ -74,6 +77,7 @@ class TabuSearch:
 
     def search(self):
         random.seed(self.seed_value)
+        np.random.seed(self.seed_value)
         start = time.process_time()
         # Evaluate initial solution.ž
         self.evaluate_objectives(self.init_sol)

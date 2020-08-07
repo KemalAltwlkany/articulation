@@ -4,6 +4,34 @@ from src.PreferenceArticulation.BenchmarkObjectives import *
 import plotly.graph_objects as go
 
 
+def plot_FON_objective_space(n_samples=200, show=True, n_dims=2):
+    # It can be computed using 2 dimensions always, as the number of dimensions does not influence the objective space
+
+    x_range = np.array((np.linspace(-4, 4, n_samples), )*n_dims)
+    mesh = np.array(np.meshgrid(*x_range))
+    a = mesh.reshape((n_dims, n_samples**n_dims))
+    n = n_dims
+    sum1 = np.sum(np.square(a - 1. / math.sqrt(n)), axis=0)
+    sum2 = np.sum(np.square(a + 1. / math.sqrt(n)), axis=0)
+    f1 = 1 - np.exp(-sum1)
+    f2 = 1 - np.exp(-sum2)
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(name='Objective space', x=f1, y=f2, mode='markers', marker=dict(color='orange'), marker_size=5))
+
+    # The Pareto front
+    x1_range = np.linspace(-1./math.sqrt(n_dims), 1./math.sqrt(n_dims), n_samples // 10)
+    x2_range = x1_range.copy()
+    x1, x2 = x1_range, x2_range
+    f1 = np.square(x1 - 1./math.sqrt(n)) + np.square(x2 - 1./math.sqrt(n))
+    f2 = np.square(x1 + 1./math.sqrt(n)) + np.square(x2 + 1./math.sqrt(n))
+    f1 = 1 - np.exp(-f1)
+    f2 = 1 - np.exp(-f2)
+    fig.add_trace(go.Scatter(name='Pareto front', x=f1, y=f2, mode='lines', line=dict(color='blue', width=5)))
+    if show is True:
+        fig.show()
+    return fig
+
 def plot_BK1_objective_space(n_samples=100, show=True):
     # The objective space - a few samples
     x1_range = np.linspace(-5, 10, n_samples)
@@ -31,6 +59,58 @@ def plot_BK1_objective_space(n_samples=100, show=True):
     if show is True:
         fig.show()
     return fig
+
+def plot_IM1_objective_space(n_samples=100, show=True):
+    # The objective space - a few samples
+    x1_range = np.linspace(1, 4, n_samples)
+    x2_range = np.linspace(1, 2, n_samples)
+    x1, x2 = np.meshgrid(x1_range, x2_range)
+    f1 = 2 * np.sqrt(x1)
+    f2 = x1 * (1 - x2) + 5
+    f1 = np.reshape(f1, f1.size)
+    f2 = np.reshape(f2, f2.size)
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(name='Objective space', x=f1, y=f2, mode='markers', marker=dict(color='orange'), marker_size=5))
+
+    # The Pareto front
+    x1_range = np.linspace(1, 4, n_samples // 10)
+    x2_range = 2 * np.ones(n_samples//10)
+    # x1, x2 = np.meshgrid(x1_range, x2_range)
+    x1, x2 = x1_range, x2_range
+    f1 = 2 * np.sqrt(x1)
+    f2 = x1 * (1 - x2) + 5
+    f1 = np.reshape(f1, f1.size)
+    f2 = np.reshape(f2, f2.size)
+    fig.add_trace(go.Scatter(name='Pareto front', x=f1, y=f2, mode='lines', line=dict(color='blue', width=5)))
+
+    if show is True:
+        fig.show()
+    return fig
+
+def plot_SCH1_objective_space(n_samples=100, show=True):
+    # The objective space - a few samples
+    x1 = np.linspace(-7, 7, n_samples*10)
+    f1 = x1**2
+    f2 = (x1-2)**2
+    f1 = np.reshape(f1, f1.size)
+    f2 = np.reshape(f2, f2.size)
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(name='Objective space', x=f1, y=f2, mode='markers', marker=dict(color='orange'), marker_size=5))
+
+    # The Pareto front
+    x1 = np.linspace(0, 2, n_samples//5)
+    f1 = x1**2
+    f2 = (x1 - 2) ** 2
+    f1 = np.reshape(f1, f1.size)
+    f2 = np.reshape(f2, f2.size)
+    fig.add_trace(go.Scatter(name='Pareto front', x=f1, y=f2, mode='lines', line=dict(color='blue', width=5)))
+
+    if show is True:
+        fig.show()
+    return fig
+
 
 
 def plot_search_results(func, search_results, title='Test', x_label='x', y_label='y', n_samples=50, show=False, save=False, save_options=None):
@@ -112,5 +192,8 @@ def create_plots(articulation_type, benchmark_problem, func, extension='.png', n
 
 
 if __name__ == '__main__':
-    create_plots('aposteriori', 'BK1', plot_BK1_objective_space)
+    # create_plots('aposteriori', 'BK1', plot_BK1_objective_space)
+    # create_plots('aposteriori', 'IM1', plot_IM1_objective_space)
+    # create_plots('aposteriori', 'SCH1', plot_SCH1_objective_space)
+    create_plots('aposteriori', 'FON', plot_FON_objective_space)
 

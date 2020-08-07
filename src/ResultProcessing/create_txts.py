@@ -1,5 +1,4 @@
 import os as os
-import glob as glob
 import pickle as pickle
 
 # POTENTIAL PROBLEM:
@@ -82,7 +81,10 @@ def main(load_path, save_path):
 
 
 if __name__ == '__main__':
-    main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/BK1/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/BK1/txts/')
+    #main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/BK1/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/BK1/txts/')
+    #main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/IM1/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/IM1/txts/')
+    #main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/SCH1/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/SCH1/txts/')
+    main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/FON/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/FON/txts/')
 
 
 

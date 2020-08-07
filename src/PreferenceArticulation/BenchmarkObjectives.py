@@ -58,7 +58,7 @@ class MOO_Problem:
         """
         f1 = 2*math.sqrt(x[0])
         f2 = x[0]*(1-x[1]) + 5
-        return [f1, f2]
+        return np.array([f1, f2])
 
     @staticmethod
     def SCH1(x):
@@ -69,7 +69,7 @@ class MOO_Problem:
         x € [0, 2] (Pareto optimal set).
         :return:
         """
-        return [x[0]**2, (x[0] - 2)**2]
+        return np.array([x[0]**2, (x[0] - 2)**2])
 
     @staticmethod
     def FON(x):
@@ -85,13 +85,10 @@ class MOO_Problem:
         The search space is limited to -4<= x <= 4
         :return:
         """
-        n = len(x)
-        sum1 = 0
-        sum2 = 0
-        for i in range(n):
-            sum1 = sum1 - math.pow(x[i] - 1./math.sqrt(n), 2)
-            sum2 = sum2 - math.pow(x[i] + 1./math.sqrt(n), 2)
-        return [1 - math.exp(sum1), 1 - math.exp(sum2)]
+        n = x.size
+        sum1 = np.sum(np.square(x - 1./math.sqrt(n)))
+        sum2 = np.sum(np.square(x + 1./math.sqrt(n)))
+        return np.array([1 - math.exp(-sum1), 1 - math.exp(-sum2)])
 
     @staticmethod
     def TNK(x):
@@ -127,6 +124,13 @@ class MOO_Problem:
 
 
 class MOO_Constraints:
+    """
+    Class is never meant to be instantiated. It keeps together all the constraints used for test functions.
+    All constraints are implemented as static methods which return the number of violations made. This is then multiplied
+    by a deterioration factor (penalty factor - M) and ADDED to the evaluation of a solution (added because the goal is
+    to minimize the function).
+    For more complex constraints, it might be easier to break them into several separate static methods for readability.
+    """
     @staticmethod
     def BK1_constraint(x):
         """
@@ -136,5 +140,34 @@ class MOO_Constraints:
         :return: <int> number of constraints violated
         """
         return np.count_nonzero((x < -5) | (x > 10))
+
+    @staticmethod
+    def IM1_constraint(x):
+        """
+        x1 € [1, 4]
+        x2 € [1, 2]
+        :param x: np.ndarray
+        :return: <int> number of constraints violated
+        """
+        return np.count_nonzero(x < 1) + np.count_nonzero(x[0] > 4) + np.count_nonzero(x[1] > 2)
+
+    @staticmethod
+    def FON_constraint(x):
+        """
+        xi € [-4, 4]
+        :param x: np.ndarray
+        :return: <int> number of constraints violated
+        """
+        return np.count_nonzero((x < -4) | (x > 4))
+
+    # @staticmethod
+    # def SCH1_constraint(x):
+    #     """
+    #     x1 € [0, 2]
+    #     :param x: np.ndarray
+    #     :return: <int> number of constraints violated
+    #     """
+    #     return np.count_nonzero((x < 0) | (x > 2))
+
 
 
