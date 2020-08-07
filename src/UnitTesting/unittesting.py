@@ -165,7 +165,48 @@ class ConstraintTests(unittest.TestCase):
         x = np.array([3.5, 0.01, 2, 1, 3, 3.999, -3.8, -0.1])
         self.assertEqual(constraint(x), 0)
 
+    def test_constraint_TNK_1(self):
+        constraint = MOO_Constraints.TNK_constraint_1
 
+        def manual_computation(a):
+            sum_ = 0
+            if a[0] < 0 or a[0] > math.pi:
+                sum_ += 1
+            if a[1] < 0 or a[1] > math.pi:
+                sum_ += 1
+            return sum_
+
+        for i in range(500):
+            x = np.random.uniform(low=-5, high=5, size=2)
+            self.assertEqual(constraint(x), manual_computation(x))
+
+    def test_constraint_TNK_2(self):
+        constraint = MOO_Constraints.TNK_constraint_2
+        
+        def manual_computation(a):
+            if math.isclose(a[0], 0, rel_tol=0.000000001, abs_tol=0.0000000001):
+                left_side = a[1]**2
+                right_side = 1.1
+            else:
+                left_side = a[0]**2 + a[1]**2
+                right_side = 1 + 0.1*math.cos(16*math.atan(a[1]/a[0]))
+            return int(left_side >= right_side)
+        
+        for i in range(500):
+            x = np.random.uniform(low=-5, high=5, size=2)
+            self.assertEqual(constraint(x), manual_computation(x))
+
+    def test_constraint_TNK_3(self):
+        constraint = MOO_Constraints.TNK_constraint_3
+
+        def manual_computation(a):
+            left_side = (a[0] - 0.5)**2 + (a[1] - 0.5)**2
+            right_side = 0.5
+            return int(left_side <= right_side)
+
+        for i in range(100):
+            x = np.random.uniform(low=-5, high=5, size=2)
+            self.assertEqual(constraint(x), manual_computation(x))
 
 
 

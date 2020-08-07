@@ -110,8 +110,9 @@ def aposteriori_IM1(n_tests=20):
         params['init_sol'] = Solution(np.array([random.uniform(1, 4), random.uniform(1, 2)]))
         SearchInstance = AposterioriWeightingMethod(**params)
         SearchInstance.search()
-    
-    
+
+
+
 def aposteriori_BK1(n_tests=20):
     params = dict(
         init_sol=Solution(np.array([9, 9])),

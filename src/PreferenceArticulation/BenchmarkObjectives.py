@@ -104,7 +104,7 @@ class MOO_Problem:
         about it are explained, such as where the Front lies and the non-convexity of the Pareto front.
         :return:
         """
-        return [x[0], x[1]]
+        return np.copy(x)
 
     @staticmethod
     def OSY(x):
@@ -159,6 +159,40 @@ class MOO_Constraints:
         :return: <int> number of constraints violated
         """
         return np.count_nonzero((x < -4) | (x > 4))
+
+    @staticmethod
+    def TNK_constraint_1(x):
+        """
+        The first of 3 constraints regarding the TNK problem.
+        This one ensures parameters are within allowed bounds.
+        :param x: np.ndarray
+        :return: <int> number of constraints violated
+        """
+        return np.count_nonzero((x < 0) | (x > np.pi))
+
+    @staticmethod
+    def TNK_constraint_2(x):
+        """
+        The second of 3 constraints regarding the TNK problem.
+        This one covers the first equated constraint.
+        It has to be hardcoded when x1 is equal to 0.
+        :param x: np.ndarray
+        :return: <int> number of constraints violated
+        """
+        if math.isclose(x[0], 0, rel_tol=0.000000001, abs_tol=0.0000000001):
+            return int(x[1]**2 >= 1.1)
+        else:
+            return int(x[0]**2 + x[1]**2 >= 1 + 0.1*math.cos(16 * math.atan(x[1]/x[0])))
+
+    @staticmethod
+    def TNK_constraint_3(x):
+        """
+        The third of 3 constraints regarding the TNK problem.
+        This one covers the second equated constrainted.
+        :param x: np.ndarray
+        :return: <int> number of constraints violated
+        """
+        return int((x[0] - 0.5)**2 + (x[1] - 0.5)**2 <= 0.5)
 
     # @staticmethod
     # def SCH1_constraint(x):
