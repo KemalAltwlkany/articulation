@@ -8,6 +8,39 @@ from src.PreferenceArticulation.BenchmarkObjectives import *
 from src.TabuSearch.weighting_method import AposterioriWeightingMethod
 
 
+def aposteriori_TNK(n_tests=20):
+    params = dict(
+        init_sol=Solution(np.array([2, 2])),
+        problem=MOO_Problem.TNK,
+        constraints=[MOO_Constraints.TNK_constraint_1, MOO_Constraints.TNK_constraint_2, MOO_Constraints.TNK_constraint_3],
+        step_size=0.05,
+        neighborhood_size=15,
+        max_iter=2500,
+        M=100,
+        tabu_list_max_length=20,
+        max_loops=100,
+        search_space_dimensions=2,
+        objective_space_dimensions=2,
+        save=True,
+        weights=[0.5, 0.5]
+    )
+    save_options = dict(
+        path='/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/TNK/',
+        filename=''
+    )
+    for i in range(n_tests):
+        save_options['filename'] = 'TNK_test_' + str(i+1) + '.pickle'
+        params['save_options'] = save_options
+        params['seed_value'] = i
+        params['test_ID'] = 'TNK_test_' + str(i+1)
+        random.seed(9)
+        np.random.seed(9)
+        a = random.random()
+        params['weights'] = [a, 1-a]
+        params['init_sol'] = Solution(np.array([random.uniform(0, math.pi), random.uniform(0, math.pi)]))
+        SearchInstance = AposterioriWeightingMethod(**params)
+        SearchInstance.search()
+
 def aposteriori_FON(n_tests=20, n_dims=2):
     params = dict(
         init_sol=Solution(np.array([3.5]*n_dims)),
@@ -40,7 +73,6 @@ def aposteriori_FON(n_tests=20, n_dims=2):
         params['init_sol'] = Solution(np.random.uniform(low=-4, high=4, size=n_dims))
         SearchInstance = AposterioriWeightingMethod(**params)
         SearchInstance.search()
-
 
 def aposteriori_SCH1(n_tests=20):
     params = dict(
@@ -78,7 +110,6 @@ def aposteriori_SCH1(n_tests=20):
         SearchInstance = AposterioriWeightingMethod(**params)
         SearchInstance.search()
 
-
 def aposteriori_IM1(n_tests=20):
     params = dict(
         init_sol=Solution(np.array([2, 1.5])),
@@ -110,8 +141,6 @@ def aposteriori_IM1(n_tests=20):
         params['init_sol'] = Solution(np.array([random.uniform(1, 4), random.uniform(1, 2)]))
         SearchInstance = AposterioriWeightingMethod(**params)
         SearchInstance.search()
-
-
 
 def aposteriori_BK1(n_tests=20):
     params = dict(
@@ -150,6 +179,6 @@ if __name__ == '__main__':
     #aposteriori_BK1()
     #aposteriori_IM1(n_tests=20)
     #aposteriori_SCH1()
-    aposteriori_FON()
-
+    #aposteriori_FON()
+    aposteriori_TNK(100)
 

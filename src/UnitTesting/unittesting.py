@@ -59,14 +59,12 @@ class TabuTests(unittest.TestCase):
     def setUp(self):
         Solution.eps = 0.00001
 
-
     def test_solution_comparisons(self):
         # this method tests whether a solution is in a list (tabu list)
         x1, x2, x3 = np.array([1, 2, 3]), np.array([1.0, 2.0, 3.0]), np.array([1.00001, 2.0, 3.0])
         tabu_list = [Solution(x1), Solution(x2), Solution(x3)]
         sol = Solution(np.array([1.000000001, 2.00000001, 3.0]))
         self.assertTrue(sol in tabu_list)
-
 
 
 class ProblemTests(unittest.TestCase):
@@ -94,14 +92,6 @@ class ProblemTests(unittest.TestCase):
                 manual, numpyist = compute_FON_manually(x), evaluation(x)
                 self.assertAlmostEqual(manual[0], numpyist[0])
                 self.assertAlmostEqual(manual[1], numpyist[1])
-
-
-
-
-
-
-
-
 
 
 class ConstraintTests(unittest.TestCase):
@@ -207,6 +197,10 @@ class ConstraintTests(unittest.TestCase):
         for i in range(100):
             x = np.random.uniform(low=-5, high=5, size=2)
             self.assertEqual(constraint(x), manual_computation(x))
+
+        x = np.array([1.1727, 0.435])
+        print(constraint(x))
+        self.assertEqual(constraint(x), manual_computation(x))
 
 
 

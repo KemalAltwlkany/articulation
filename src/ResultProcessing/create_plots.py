@@ -1,33 +1,26 @@
 import os as os
 import pickle as pickle
-from src.PreferenceArticulation.BenchmarkObjectives import *
 import plotly.graph_objects as go
+from itertools import product
+from src.PreferenceArticulation.BenchmarkObjectives import *
+
+# nsamples is unused, it will be removed from all benchmark functions soon
+def plot_TNK_objective_space(n_samples=100, show=True):
+    path = '/home/kemal/Programming/Python/Articulation/data/precomputed_data/'
+    os.chdir(path)
+
+    file = open(path + 'TNK_data.pickle', 'rb')
+    data = pickle.load(file)
+    file.close()
 
 
-def plot_FON_objective_space(n_samples=200, show=True, n_dims=2):
-    # It can be computed using 2 dimensions always, as the number of dimensions does not influence the objective space
-
-    x_range = np.array((np.linspace(-4, 4, n_samples), )*n_dims)
-    mesh = np.array(np.meshgrid(*x_range))
-    a = mesh.reshape((n_dims, n_samples**n_dims))
-    n = n_dims
-    sum1 = np.sum(np.square(a - 1. / math.sqrt(n)), axis=0)
-    sum2 = np.sum(np.square(a + 1. / math.sqrt(n)), axis=0)
-    f1 = 1 - np.exp(-sum1)
-    f2 = 1 - np.exp(-sum2)
     fig = go.Figure()
     fig.add_trace(
-        go.Scatter(name='Objective space', x=f1, y=f2, mode='markers', marker=dict(color='orange'), marker_size=5))
-
-    # The Pareto front
-    x1_range = np.linspace(-1./math.sqrt(n_dims), 1./math.sqrt(n_dims), n_samples // 10)
-    x2_range = x1_range.copy()
-    x1, x2 = x1_range, x2_range
-    f1 = np.square(x1 - 1./math.sqrt(n)) + np.square(x2 - 1./math.sqrt(n))
-    f2 = np.square(x1 + 1./math.sqrt(n)) + np.square(x2 + 1./math.sqrt(n))
-    f1 = 1 - np.exp(-f1)
-    f2 = 1 - np.exp(-f2)
-    fig.add_trace(go.Scatter(name='Pareto front', x=f1, y=f2, mode='lines', line=dict(color='blue', width=5)))
+        go.Scatter(name='Objective space', x=data['search_f1'], y=data['search_f2'], mode='markers',
+                   marker=dict(color='orange'), marker_size=5))
+    fig.add_trace(
+        go.Scatter(name='Pareto front', x=data['pareto_f1'], y=data['pareto_f2'], mode='markers', marker=dict(color='blue'),
+                   marker_size=5))
     if show is True:
         fig.show()
     return fig
@@ -111,7 +104,33 @@ def plot_SCH1_objective_space(n_samples=100, show=True):
         fig.show()
     return fig
 
+def plot_FON_objective_space(n_samples=200, show=True, n_dims=2):
+    # It can be computed using 2 dimensions always, as the number of dimensions does not influence the objective space
 
+    x_range = np.array((np.linspace(-4, 4, n_samples), )*n_dims)
+    mesh = np.array(np.meshgrid(*x_range))
+    a = mesh.reshape((n_dims, n_samples**n_dims))
+    n = n_dims
+    sum1 = np.sum(np.square(a - 1. / math.sqrt(n)), axis=0)
+    sum2 = np.sum(np.square(a + 1. / math.sqrt(n)), axis=0)
+    f1 = 1 - np.exp(-sum1)
+    f2 = 1 - np.exp(-sum2)
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(name='Objective space', x=f1, y=f2, mode='markers', marker=dict(color='orange'), marker_size=5))
+
+    # The Pareto front
+    x1_range = np.linspace(-1./math.sqrt(n_dims), 1./math.sqrt(n_dims), n_samples // 10)
+    x2_range = x1_range.copy()
+    x1, x2 = x1_range, x2_range
+    f1 = np.square(x1 - 1./math.sqrt(n)) + np.square(x2 - 1./math.sqrt(n))
+    f2 = np.square(x1 + 1./math.sqrt(n)) + np.square(x2 + 1./math.sqrt(n))
+    f1 = 1 - np.exp(-f1)
+    f2 = 1 - np.exp(-f2)
+    fig.add_trace(go.Scatter(name='Pareto front', x=f1, y=f2, mode='lines', line=dict(color='blue', width=5)))
+    if show is True:
+        fig.show()
+    return fig
 
 def plot_search_results(func, search_results, title='Test', x_label='x', y_label='y', n_samples=50, show=False, save=False, save_options=None):
     # plot a few samples of the objective space and the Pareto front
@@ -195,5 +214,6 @@ if __name__ == '__main__':
     # create_plots('aposteriori', 'BK1', plot_BK1_objective_space)
     # create_plots('aposteriori', 'IM1', plot_IM1_objective_space)
     # create_plots('aposteriori', 'SCH1', plot_SCH1_objective_space)
-    create_plots('aposteriori', 'FON', plot_FON_objective_space)
+    # create_plots('aposteriori', 'FON', plot_FON_objective_space)
+    create_plots('aposteriori', 'TNK', plot_TNK_objective_space)
 
