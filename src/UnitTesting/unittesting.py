@@ -78,7 +78,7 @@ class ProblemTests(unittest.TestCase):
             n = len(x)
             sum1 = 0
             sum2 = 0
-            for i in range(n):
+            for k in range(n):
                 sum1 = sum1 - math.pow(x[i] - 1. / math.sqrt(n), 2)
                 sum2 = sum2 - math.pow(x[i] + 1. / math.sqrt(n), 2)
             return np.array([1 - math.exp(sum1), 1 - math.exp(sum2)])
@@ -93,6 +93,20 @@ class ProblemTests(unittest.TestCase):
                 self.assertAlmostEqual(manual[0], numpyist[0])
                 self.assertAlmostEqual(manual[1], numpyist[1])
 
+    def test_OSY_evaluation(self):
+        evaluation = MOO_Problem.OSY
+
+        def manual_f1(a):
+            return -25 * (a[0] - 2) ** 2 - (a[1] - 2) ** 2 - (a[2] - 1) ** 2 - (a[3] - 4) ** 2 - (a[4] - 1) ** 2
+
+        def manual_f2(a):
+            return a[0] ** 2 + a[1] ** 2 + a[2] ** 2 + a[3] ** 2 + a[4] ** 2 + a[5] ** 2
+
+        for i in range(1000):
+            np.random.seed(i)
+            x = np.random.rand(6)
+            self.assertAlmostEqual(evaluation(x)[0], manual_f1(x))
+            self.assertAlmostEqual(evaluation(x)[1], manual_f2(x))
 
 class ConstraintTests(unittest.TestCase):
     def test_constraint_BK1(self):
@@ -201,6 +215,5 @@ class ConstraintTests(unittest.TestCase):
         x = np.array([1.1727, 0.435])
         print(constraint(x))
         self.assertEqual(constraint(x), manual_computation(x))
-
 
 

@@ -4,26 +4,7 @@ import plotly.graph_objects as go
 from itertools import product
 from src.PreferenceArticulation.BenchmarkObjectives import *
 
-# nsamples is unused, it will be removed from all benchmark functions soon
-def plot_TNK_objective_space(n_samples=100, show=True):
-    path = '/home/kemal/Programming/Python/Articulation/data/precomputed_data/'
-    os.chdir(path)
 
-    file = open(path + 'TNK_data.pickle', 'rb')
-    data = pickle.load(file)
-    file.close()
-
-
-    fig = go.Figure()
-    fig.add_trace(
-        go.Scatter(name='Objective space', x=data['search_f1'], y=data['search_f2'], mode='markers',
-                   marker=dict(color='orange'), marker_size=5))
-    fig.add_trace(
-        go.Scatter(name='Pareto front', x=data['pareto_f1'], y=data['pareto_f2'], mode='markers', marker=dict(color='blue'),
-                   marker_size=5))
-    if show is True:
-        fig.show()
-    return fig
 
 def plot_BK1_objective_space(n_samples=100, show=True):
     # The objective space - a few samples
@@ -132,9 +113,44 @@ def plot_FON_objective_space(n_samples=200, show=True, n_dims=2):
         fig.show()
     return fig
 
-def plot_search_results(func, search_results, title='Test', x_label='x', y_label='y', n_samples=50, show=False, save=False, save_options=None):
-    # plot a few samples of the objective space and the Pareto front
-    fig = func(n_samples=n_samples, show=show)
+# nsamples is unused, it will be removed from all benchmark functions soon
+def plot_TNK_objective_space(n_samples=100, show=True):
+    path = '/home/kemal/Programming/Python/Articulation/data/precomputed_data/'
+    os.chdir(path)
+
+    file = open(path + 'TNK_data.pickle', 'rb')
+    data = pickle.load(file)
+    file.close()
+
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(name='Objective space', x=data['search_f1'], y=data['search_f2'], mode='markers',
+                   marker=dict(color='orange'), marker_size=5))
+    fig.add_trace(
+        go.Scatter(name='Pareto front', x=data['pareto_f1'], y=data['pareto_f2'], mode='markers', marker=dict(color='blue'),
+                   marker_size=5))
+    if show is True:
+        fig.show()
+    return fig
+
+
+def plot_search_results(articulation_type, benchmark_problem, search_results, title='Test', x_label='x', y_label='y', show=False, save=False, save_options=None):
+    # load precomputed data (search space and Pareto front)
+    load_path = '/home/kemal/Programming/Python/Articulation/data/precomputed_data/'
+    file = open(load_path + benchmark_problem + '_data.pickle', 'rb')
+    data = pickle.load(file)
+    file.close()
+
+    # plot the precomputed data
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(name='Objective space', x=data['search_f1'], y=data['search_f2'], mode='markers',
+                   marker=dict(color='orange'), marker_size=5))
+    fig.add_trace(
+        go.Scatter(name='Pareto front', x=data['pareto_f1'], y=data['pareto_f2'], mode='markers',
+                   marker=dict(color='blue'),
+                   marker_size=5))
 
     # extract search history information from "search_results"
     search_history = search_results['search_history']
@@ -173,20 +189,12 @@ def plot_search_results(func, search_results, title='Test', x_label='x', y_label
     if save is True:
         os.chdir(save_options['path'])
         fig.write_image(save_options['path'] + save_options['name'])
-    # fig.add_trace(go.Scatter(x=))
 
 
-def create_plots(articulation_type, benchmark_problem, func, extension='.png', n_samples=50, x_label='f1(x1, x2)', y_label='f2(x1, x2)'):
-    # load pickled dictionaries into list of dictionaries
+# Can/should be modified so that I can specify whether to plot one particular test (or particular tests) instead or all.
+def create_plots(articulation_type, benchmark_problem, extension='.png', n_samples=50, x_label='f1(x1, x2)', y_label='f2(x1, x2)'):
     load_path = '/home/kemal/Programming/Python/Articulation/data/pickles/' + articulation_type + '/' + benchmark_problem + '/'
-    os.chdir(load_path)
-    file_names = os.listdir()
-    dicts = []
-    for p in file_names:
-        file = open(load_path + p, 'rb')
-        dicts.append(pickle.load(file))
-        file.close()
-
+    save_path = '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/' + articulation_type + '/' + benchmark_problem + '/' + 'plots' + '/'
     # Some mappings for pretty outputs
     name_mappings = {
         'aposteriori': 'A posteriori',
@@ -194,10 +202,13 @@ def create_plots(articulation_type, benchmark_problem, func, extension='.png', n
         'apriori': 'A priori'
     }
 
-    save_path = '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/' + articulation_type + '/' + benchmark_problem + '/' + 'plots' + '/'
-
-    # create plots for every dictionary
-    for d in dicts:
+    os.chdir(load_path)
+    file_names = os.listdir()
+    # Each iteration one pickled test is read, and a plot is created.
+    for p in file_names:
+        file = open(load_path + p, 'rb')
+        d = pickle.load(file)
+        file.close()
         search_results = dict(
             search_history=d['search_history'],
             global_best_sol=d['global_best_sol']
@@ -206,14 +217,16 @@ def create_plots(articulation_type, benchmark_problem, func, extension='.png', n
             path=save_path,
             name=str(d['test_ID'] + extension)
         )
-        plot_search_results(func, search_results, title=str(name_mappings[articulation_type] + ' ' + benchmark_problem),
-                            x_label=x_label, y_label=y_label, n_samples=n_samples, show=False, save=True, save_options=save_options)
+        plot_search_results(articulation_type, benchmark_problem, search_results, title=str(name_mappings[articulation_type] + ' ' + benchmark_problem),
+                            x_label=x_label, y_label=y_label, show=False, save=True,
+                            save_options=save_options)
 
 
 if __name__ == '__main__':
-    # create_plots('aposteriori', 'BK1', plot_BK1_objective_space)
-    # create_plots('aposteriori', 'IM1', plot_IM1_objective_space)
-    # create_plots('aposteriori', 'SCH1', plot_SCH1_objective_space)
-    # create_plots('aposteriori', 'FON', plot_FON_objective_space)
-    create_plots('aposteriori', 'TNK', plot_TNK_objective_space)
+    # create_plots('aposteriori', 'BK1')
+    # create_plots('aposteriori', 'IM1')
+    # create_plots('aposteriori', 'SCH1')
+    create_plots('aposteriori', 'FON')
+    # create_plots('aposteriori', 'TNK')
+    # create_plots('aposteriori', 'OSY')
 

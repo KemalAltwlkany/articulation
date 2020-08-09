@@ -1,9 +1,9 @@
-import math as math
-x1 = 1.02386434
-x2 = 0.75532660
-f1 = x1**2 + x2**2 - 0.1*math.cos(16*math.atan(x2/x1))
-f2 = (x1 - 0.5)**2 + (x2 - 0.5)**2
-print(f1)
-print(f2)
+import numpy as np
+
+x1 = np.array([1, 2, 3, 4, 5])
+x2 = np.array([1, 1, 1, 1, 1])
+
+print(np.subtract(x1[:-1], x2[:-1]))
+print(np.square(np.subtract(x1[:-1], x2[:-1])))
 
 

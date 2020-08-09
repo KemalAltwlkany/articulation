@@ -118,9 +118,11 @@ class MOO_Problem:
         Deb explains within detail how to obtain the Pareto front of this problem.
         :return:
         """
-        f1 = -25 * math.pow(x[0] - 2, 2) - math.pow(x[1] - 2, 2) - math.pow(x[2] - 1, 2) - math.pow(x[3] - 4, 2) - math.pow(x[4] - 1, 2)
-        f2 = math.pow(x[0], 2) + math.pow(x[1], 2) + math.pow(x[2], 2) + math.pow(x[3], 2) + math.pow(x[4], 2) + math.pow(x[5], 2)
-        return [f1, f2]
+        # f1 = -25*(x0-2)² - (x1-2)² - (x2-1)² - (x3-4)² - (x5-1)²
+        f1 = np.square(np.subtract(x[:-1], np.array([2, 2, 1, 4, 1])))
+        f1 = -24*f1[0] - np.sum(f1)
+        f2 = np.sum(np.square(x))
+        return np.array([f1, f2])
 
 
 class MOO_Constraints:
@@ -165,6 +167,7 @@ class MOO_Constraints:
         """
         The first of 3 constraints regarding the TNK problem.
         This one ensures parameters are within allowed bounds.
+        xi € [0, pi]
         :param x: np.ndarray
         :return: <int> number of constraints violated
         """
@@ -182,7 +185,7 @@ class MOO_Constraints:
         if math.isclose(x[0], 0, rel_tol=0.000000001, abs_tol=0.0000000001):
             return int(x[1]**2 >= 1.1)
         else:
-            return int(x[0]**2 + x[1]**2 >= 1 + 0.1*math.cos(16 * math.atan(x[1]/x[0])))
+            return int(not(x[0]**2 + x[1]**2 >= 1 + 0.1*math.cos(16 * math.atan(x[1]/x[0]))))
 
     @staticmethod
     def TNK_constraint_3(x):
@@ -192,16 +195,40 @@ class MOO_Constraints:
         :param x: np.ndarray
         :return: <int> number of constraints violated
         """
-        return int((x[0] - 0.5)**2 + (x[1] - 0.5)**2 <= 0.5)
+        return int(not((x[0] - 0.5)**2 + (x[1] - 0.5)**2 <= 0.5))
 
-    # @staticmethod
-    # def SCH1_constraint(x):
-    #     """
-    #     x1 € [0, 2]
-    #     :param x: np.ndarray
-    #     :return: <int> number of constraints violated
-    #     """
-    #     return np.count_nonzero((x < 0) | (x > 2))
+    @staticmethod
+    def OSY_constraint_1(x):
+        return int(not(x[0] + x[1] - 2 >= 0))
 
+    @staticmethod
+    def OSY_constraint_2(x):
+        return int(not(6 - x[0] - x[1] >= 0))
 
+    @staticmethod
+    def OSY_constraint_3(x):
+        return int(not(2 - x[1] + x[0] >= 0))
+
+    @staticmethod
+    def OSY_constraint_4(x):
+        return int(not(2 - x[0] + 3*x[1] >= 0))
+
+    @staticmethod
+    def OSY_constraint_5(x):
+        return int(not(4 - (x[2] - 3)**2 - x[3] >= 0))
+
+    @staticmethod
+    def OSY_constraint_6(x):
+        return int(not((x[4] - 3)**2 + x[5] - 4 >= 0))
+
+    @staticmethod
+    def OSY_constraint_7(x):
+        v = 0
+        v += int(x[0] < 0 or x[0] - 10 > 0)
+        v += int(x[1] < 0 or x[1] - 10 > 0)
+        v += int(x[5] < 0 or x[5] - 10 > 0)
+        v += int(x[2] - 1 < 0 or x[2] - 5 > 0)
+        v += int(x[4] - 1 < 0 or x[4] - 5 > 0)
+        v += int(x[3] < 0 or x[3] - 6 > 0)
+        return v
 
