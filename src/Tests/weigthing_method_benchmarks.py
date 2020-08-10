@@ -143,7 +143,6 @@ def aposteriori_FON(n_tests=20, n_dims=2):
         np.random.seed(i)
         a = random.random()
         params['weights'] = [a, 1 - a]
-        np.random.seed(i)
         params['init_sol'] = Solution(np.random.uniform(low=-4, high=4, size=n_dims))
         SearchInstance = AposterioriWeightingMethod(**params)
         SearchInstance.search()

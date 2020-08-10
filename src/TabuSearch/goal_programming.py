@@ -23,7 +23,7 @@ class AprioriFuzzyGoalProgramming(TabuSearch):
         :param sol:
         :return:
         """
-        sol.set_val(np.max(np.subtract(sol.get_y(), self.aspirations)))
+        sol.set_val(np.max(np.subtract(sol.get_y(), self.aspirations)) + self.penalty(sol))
 
 
 

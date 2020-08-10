@@ -8,7 +8,7 @@ import pickle as pickle
 
 
 # This script unpickles results saved as a *.pickle file and creates *.txt files from them.
-def main(load_path, save_path, art_type='aposteriori'):
+def main(art_type='aposteriori', load_path=None, save_path=None):
     # load pickled dictionaries into list of dictionaries
     os.chdir(load_path)
     file_names = os.listdir()
@@ -40,8 +40,8 @@ def main(load_path, save_path, art_type='aposteriori'):
         # Update 10.08.2020. - this is the only difference between a priori and a posteriori
         if art_type == 'aposteriori':
             f.write(wh + 'Weights = {' + "\n")
-            for ind, zj in enumerate(dicts[i]['aspirations']):
-                f.write(wh + wh + 'z' + str(ind + 1) + " = == " + str(zj) + "\n")
+            for ind, wi in enumerate(dicts[i]['aspirations']):
+                f.write(wh + wh + 'z' + str(ind + 1) + " = == " + str(wi) + "\n")
             f.write(wh + "}\n")
         elif art_type == 'apriori':
             f.write(wh + 'Aspiration levels = {' + "\n")
@@ -92,13 +92,15 @@ def main(load_path, save_path, art_type='aposteriori'):
 
 if __name__ == '__main__':
     # A POSTERIORI TESTS
-    #main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/BK1/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/BK1/txts/')
-    #main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/IM1/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/IM1/txts/')
-    #main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/SCH1/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/SCH1/txts/')
-    #main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/FON/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/FON/txts/')
-    #main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/TNK/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/TNK/txts/')
-    #main('/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/OSY/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/OSY/txts/')
+    #main(art_type='aposteriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/BK1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/BK1/txts/')
+    #main(art_type='aposteriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/IM1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/IM1/txts/')
+    #main(art_type='aposteriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/SCH1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/SCH1/txts/')
+    #main(art_type='aposteriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/FON/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/FON/txts/')
+    #main(art_type='aposteriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/TNK/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/TNK/txts/')
+    #main(art_type='aposteriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/aposteriori/OSY/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/aposteriori/OSY/txts/')
 
     # A PRIORI TESTS
-    main('/home/kemal/Programming/Python/Articulation/data/pickles/apriori/BK1/', '/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/BK1/txts/')
+    #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/BK1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/BK1/txts/')
+    #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/IM1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/IM1/txts/')
+    main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/SCH1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/SCH1/txts/')
 

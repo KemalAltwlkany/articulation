@@ -232,6 +232,8 @@ if __name__ == '__main__':
     # create_plots('aposteriori', 'OSY')
 
     # A PRIORI TESTS
-    create_plots('apriori', 'BK1')
+    #create_plots('apriori', 'BK1')
+    #create_plots('apriori', 'IM1')
+    create_plots('apriori', 'SCH1')
 
 

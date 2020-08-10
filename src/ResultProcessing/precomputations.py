@@ -244,8 +244,8 @@ def precompute_IM1_objective_space(n_samples=100, n_samples_Pareto=100, save=Tru
         go.Scatter(name='Objective space', x=f1, y=f2, mode='markers', marker=dict(color='orange'), marker_size=5))
 
     # The Pareto front
-    x1_range = np.linspace(1, 4, n_samples // 10)
-    x2_range = 2 * np.ones(n_samples // 10)
+    x1_range = np.linspace(1, 4, n_samples_Pareto)
+    x2_range = 2 * np.ones(n_samples_Pareto)
     # x1, x2 = np.meshgrid(x1_range, x2_range)
     x1, x2 = x1_range, x2_range
     f1 = 2 * np.sqrt(x1)
@@ -365,3 +365,4 @@ if __name__ == '__main__':
     #precompute_TNK_space_and_front(n_samples=200, n_samples_Pareto=1100)
     #precompute_OSY_space_and_front()
     print('Not active.')
+
