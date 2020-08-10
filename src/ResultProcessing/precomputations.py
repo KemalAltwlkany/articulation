@@ -336,7 +336,7 @@ def precompute_FON_objective_space(n_samples=100, n_samples_Pareto=100, save=Tru
         go.Scatter(name='Objective space', x=f1, y=f2, mode='markers', marker=dict(color='orange'), marker_size=5))
 
     # The Pareto front
-    x1_range = np.linspace(-1. / math.sqrt(n_dims), 1. / math.sqrt(n_dims), n_samples // 10)
+    x1_range = np.linspace(-1. / math.sqrt(n_dims), 1. / math.sqrt(n_dims), n_samples_Pareto)
     x2_range = x1_range.copy()
     x1, x2 = x1_range, x2_range
     f1 = np.square(x1 - 1. / math.sqrt(n)) + np.square(x2 - 1. / math.sqrt(n))

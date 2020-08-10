@@ -102,5 +102,8 @@ if __name__ == '__main__':
     # A PRIORI TESTS
     #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/BK1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/BK1/txts/')
     #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/IM1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/IM1/txts/')
-    main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/SCH1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/SCH1/txts/')
+    #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/SCH1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/SCH1/txts/')
+    #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/FON/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/FON/txts/')
+    #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/TNK/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/TNK/txts/')
+    main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/OSY/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/OSY/txts/')
 
