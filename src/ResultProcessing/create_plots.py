@@ -223,10 +223,15 @@ def create_plots(articulation_type, benchmark_problem, extension='.png', n_sampl
 
 
 if __name__ == '__main__':
+    # A POSTERIORI TESTS
     # create_plots('aposteriori', 'BK1')
     # create_plots('aposteriori', 'IM1')
     # create_plots('aposteriori', 'SCH1')
-    create_plots('aposteriori', 'FON')
+    # create_plots('aposteriori', 'FON')
     # create_plots('aposteriori', 'TNK')
     # create_plots('aposteriori', 'OSY')
+
+    # A PRIORI TESTS
+    create_plots('apriori', 'BK1')
+
 

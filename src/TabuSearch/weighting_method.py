@@ -1,7 +1,4 @@
-from src.PreferenceArticulation.ArticulationExceptions import AbstractMethod
-import copy as copy
 import numpy as np
-from src.PreferenceArticulation.Solution import Solution
 from src.TabuSearch.TS import TabuSearch
 
 
