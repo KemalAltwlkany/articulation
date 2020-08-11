@@ -17,7 +17,7 @@ def augment_data(benchmark_problem='BK1'):
             print(row['val_f1'], row['dec_f1'], row['val_f2'], row['dec_f2'])
             lst.append([row['val_f1'], row['dec_f1'], row['val_f2'], row['dec_f2']])
     print(lst)
-    
+
 
 
 if __name__ == '__main__':

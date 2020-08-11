@@ -68,5 +68,6 @@ class Solution:
         for yi in self.y:
             s = s + str(yi) + ", "
         s = s + "]"
+        s = s + "\nval=" + str(self.val) + "\n"
         return s
 
