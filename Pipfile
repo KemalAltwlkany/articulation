@@ -11,6 +11,8 @@ matplotlib = "*"
 plotly = "*"
 pylint = "*"
 kaleido = "*"
+sklearn = "*"
+pandas = "*"
 
 [requires]
 python_version = "3.7"
