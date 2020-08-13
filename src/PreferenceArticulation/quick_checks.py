@@ -1,10 +1,8 @@
-
-def f():
-    return [1, 2], 3, 4
-
-
-
-x, y, z = f()
-y = 10
-print(x, y, z)
-
+x = [1, 2, 3]
+y = [4, 5]
+z = [6]
+l = [x, y, z]
+p = []
+for i in l:
+    p += i
+print(p)

@@ -1,5 +1,6 @@
 import numpy as np
 import random as random
+import copy as copy
 
 from src.PreferenceArticulation.Solution import Solution
 from src.PreferenceArticulation.BenchmarkObjectives import *
@@ -12,7 +13,7 @@ def progressive_BK1(n_tests=20, n_repetitions=10):
         constraints=[MOO_Constraints.BK1_constraint],
         step_size=0.05,
         neighborhood_size=15,
-        max_iter=2000,
+        max_iter=100,
         M=5000,  # must be a greater value for progressive art.
         tabu_list_max_length=20,
         max_loops=50,  # must be a lesser value for progressive art.
@@ -44,6 +45,9 @@ def progressive_BK1(n_tests=20, n_repetitions=10):
         AgentInstance = IntelligentDM(IDM_params, search_params)
         AgentInstance.procedure()
 
+
+if __name__ == '__main__':
+    progressive_BK1(n_tests=100, n_repetitions=10)
 
 
 

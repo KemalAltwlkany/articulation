@@ -49,6 +49,9 @@ def main(art_type='aposteriori', load_path=None, save_path=None):
                 f.write(wh + wh + 'z' + str(ind + 1) + " = == " + str(zj) + "\n")
             f.write(wh + "}\n")
 
+        if art_type == 'progressive':
+            f.write(wh + 'Total repetitions = ==' + str(dicts[i]['total_reps']) + '\n')
+
 
         f.write("----------------------------------------------Performance----------------------------------------------------------\n")
         f.write(wh + 'Time elapsed = == ' + str(dicts[i]['time_elapsed']) + '\n')
@@ -105,5 +108,10 @@ if __name__ == '__main__':
     #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/SCH1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/SCH1/txts/')
     #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/FON/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/FON/txts/')
     #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/TNK/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/TNK/txts/')
-    main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/OSY/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/OSY/txts/')
+    #main(art_type='apriori', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/apriori/OSY/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/apriori/OSY/txts/')
+
+    # PROGRESSIVE TESTS
+    main(art_type='progressive', load_path='/home/kemal/Programming/Python/Articulation/data/pickles/progressive/BK1/', save_path='/home/kemal/Programming/Python/Articulation/data/txts_and_plots/progressive/BK1/txts/')
+    #print('Not active')
+
 
