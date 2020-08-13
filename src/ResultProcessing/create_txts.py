@@ -43,7 +43,7 @@ def main(art_type='aposteriori', load_path=None, save_path=None):
             for ind, wi in enumerate(dicts[i]['aspirations']):
                 f.write(wh + wh + 'z' + str(ind + 1) + " = == " + str(wi) + "\n")
             f.write(wh + "}\n")
-        elif art_type == 'apriori':
+        elif art_type == 'apriori' or art_type == 'progressive':
             f.write(wh + 'Aspiration levels = {' + "\n")
             for ind, zj in enumerate(dicts[i]['aspirations']):
                 f.write(wh + wh + 'z' + str(ind + 1) + " = == " + str(zj) + "\n")

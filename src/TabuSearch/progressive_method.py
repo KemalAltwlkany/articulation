@@ -147,6 +147,14 @@ class IntelligentDM:
         self.last_iter = 0
         self.total_reps = 0
 
+        # latest update - add aspirations as well
+        self.aspirations = None  # these will be inferred from the .csv file which con
+        # tains articulated data
+        # that means, the aspirations can be determined in the main loop/procedure
+        # in order to be able to change the aspirations and repeat the tests easily, the latest argument
+        # indicates which csv file contains corresponding aspiration levels and criteria limits.
+        self.which_csv_index = IDM_params['which_csv_index']
+
     def save_results(self):
         # To make the results are compatible with previous articulation types
         # (in order to use the create plots and create txts functions):
@@ -181,7 +189,7 @@ class IntelligentDM:
         # and trains the decision tree.
         # f1 and f2 are return as dictionaries.
         # The key "previous_best" needs to be added manually (as the decision tree/csv contain no such info)
-        self.tree, self.f1, self.f2 = train_RBTree(problem_name=self.problem_name, save=False, ret=True)
+        self.tree, self.f1, self.f2 = train_RBTree(problem_name=self.problem_name, save=False, ret=True, which_csv_index=self.which_csv_index)
         self.f1['previous_best'] = 0
         self.f2['previous_best'] = 0
 
@@ -211,8 +219,10 @@ class IntelligentDM:
         printing = True
         previous_sol_class = None
         class_of_curr_result = None
+        self.aspirations = [self.f1['A'], self.f2['A']]
         while 1:
             self.search_params['dynamic_constraints'] = self.dynamic_constraints
+            self.search_params['aspirations'] = copy.deepcopy(self.aspirations)
             searchInstance = ProgressiveMinMaxProgramming(**self.search_params)
             results = searchInstance.search()
 
@@ -272,11 +282,12 @@ class ProgressiveMinMaxProgramming(TabuSearch):
     def __init__(self, init_sol=None, problem=None, constraints=None, step_size=None, neighborhood_size=None,
                  max_iter=None, M=None, tabu_list_max_length=None, max_loops=None, search_space_dimensions=None,
                  objective_space_dimensions=None, save=False, save_options=None, seed_value=0, test_ID=None,
-                 dynamic_constraints=None):
+                 dynamic_constraints=None, aspirations=None):
         super().__init__(init_sol, problem, constraints, step_size, neighborhood_size, max_iter, M,
                          tabu_list_max_length, max_loops, search_space_dimensions, objective_space_dimensions, save,
                          save_options, seed_value, test_ID)
 
+        self.aspirations = np.array(aspirations)
         self.dynamic_constraints = list(dynamic_constraints)  # list of functions which return penalty values.
 
     def evaluate_solution(self, sol):
@@ -290,7 +301,7 @@ class ProgressiveMinMaxProgramming(TabuSearch):
         :param sol:
         :return:
         """
-        sol.set_val(np.max(sol.get_y()) + self.penalty(sol) + self.dynamic_penatly(sol))
+        sol.set_val(np.max(np.subtract(sol.get_y(), self.aspirations)) + self.penalty(sol) + self.dynamic_penatly(sol))
 
     def dynamic_penatly(self, sol):
         penalty = 0

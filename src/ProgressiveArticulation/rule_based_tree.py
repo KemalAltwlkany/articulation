@@ -41,12 +41,12 @@ class RuleBasedTree:
             return 'I2'
 
 
-def train_RBTree(problem_name=None, save=True, ret=False):
+def train_RBTree(problem_name=None, save=True, ret=False, which_csv_index='0'):
     load_path = '/home/kemal/Programming/Python/Articulation/data/progressive/articulated_data/'
     save_path = '/home/kemal/Programming/Python/Articulation/data/progressive/RBTrees/'
 
     # open the csv file, read the columns and convert to dictionaries for easier coding
-    file_name = load_path + problem_name + '_articulated.csv'
+    file_name = load_path + '/' + problem_name + '/' + problem_name + '_' + which_csv_index + '_articulated.csv'
     df = pd.read_csv(file_name)
     f1 = df.f1.values.copy()
     f2 = df.f2.values.copy()

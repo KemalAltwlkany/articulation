@@ -42,11 +42,14 @@ def plot_search_results(articulation_type, benchmark_problem, search_results, ti
                    marker_size=28))
 
     # Update 10.08.2020. - added plotting the goals/aspiration levels if specified articulation type is a priori
-    if articulation_type == 'apriori':
+    if articulation_type == 'apriori' or articulation_type == 'progressive':
         aspiration_levels = search_results['aspirations']
         z1, z2 = [aspiration_levels[0]], [aspiration_levels[1]]
+        item_name = 'Aspiration vector'
+        if articulation_type is 'apriori':
+            item_name = 'Goal'
         fig.add_trace(
-            go.Scatter(name='Goal', x=z1, y=z2, mode='markers', marker_symbol='hexagon', marker_color='fuchsia',
+            go.Scatter(name=item_name, x=z1, y=z2, mode='markers', marker_symbol='hexagon', marker_color='fuchsia',
                        marker_size=22))
 
     # Update 13.08.2020. - added plotting the best solutions per repetition if specified articulation type is progressive
@@ -58,7 +61,7 @@ def plot_search_results(articulation_type, benchmark_problem, search_results, ti
             f1.append(y[0])
             f2.append(y[1])
         fig.add_trace(
-            go.Scatter(name='Best solution path', x=f1, y=f2, mode='markers', marker_symbol='hexagon', marker_color='fuchsia',
+            go.Scatter(name='Best solution path', x=f1, y=f2, mode='markers', marker_symbol='star-diamond', marker_color='darkmagenta',
                        marker_size=22))
 
     f1, f2 = [global_best_sol.get_y()[0]], [global_best_sol.get_y()[-1]]
@@ -111,7 +114,7 @@ def create_plots(articulation_type, benchmark_problem, extension='.png', n_sampl
         )
 
         # Update - 10.08.2020. figured I need the aspiration levels passed as well. Might add the weights while I'm at it too.
-        if articulation_type is 'apriori':
+        if articulation_type is 'apriori' or articulation_type is 'progressive':
             search_results['aspirations'] = d['aspirations']
 
         # Update - 13.08.2020. figured I need results from every search run in progressive articulation.
@@ -145,6 +148,8 @@ if __name__ == '__main__':
     #create_plots('apriori', 'OSY')
 
     # PROGRESSIVE TESTS
-    create_plots('progressive', 'BK1')
+    #create_plots('progressive', 'BK1')
+    #create_plots('progressive', 'IM1')
+    create_plots('progressive', 'SCH1')
 
     #print('Not active.')
