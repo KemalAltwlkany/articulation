@@ -1,9 +1,11 @@
 import unittest
 import numpy as np
 import random as random
+import pickle as pickle
 
 from src.PreferenceArticulation.Solution import Solution
 from src.PreferenceArticulation.BenchmarkObjectives import *
+from src.ProgressiveArticulation.rule_based_tree import RuleBasedTree
 
 
 class TestSolution(unittest.TestCase):
@@ -107,6 +109,7 @@ class ProblemTests(unittest.TestCase):
             x = np.random.rand(6)
             self.assertAlmostEqual(evaluation(x)[0], manual_f1(x))
             self.assertAlmostEqual(evaluation(x)[1], manual_f2(x))
+
 
 class ConstraintTests(unittest.TestCase):
     def test_constraint_BK1(self):
@@ -215,5 +218,4 @@ class ConstraintTests(unittest.TestCase):
         x = np.array([1.1727, 0.435])
         print(constraint(x))
         self.assertEqual(constraint(x), manual_computation(x))
-
 
