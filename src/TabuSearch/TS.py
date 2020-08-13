@@ -138,7 +138,7 @@ class TabuSearch:
                 self.termination_reason = 'Maximum iters exceeded.'
                 if self.save is True:
                     self.save_search_results()
-                return_dict = dict(search_history=self.search_history, termination_reason='max iter exceeded', last_iter=it, global_best_sol=self.global_best_sol)
+                return_dict = dict(search_history=self.search_history, termination_reason='max iter exceeded', last_iter=it, global_best_sol=self.global_best_sol, time_elapsed=self.time_elapsed)
                 return return_dict
 
             # No progress made for max_loops iterations already?
@@ -152,7 +152,7 @@ class TabuSearch:
                 self.termination_reason = 'No performance improvement.'
                 if self.save is True:
                     self.save_search_results()
-                return_dict = dict(search_history=self.search_history, termination_reason='no progress', last_iter=it, global_best_sol=self.global_best_sol)
+                return_dict = dict(search_history=self.search_history, termination_reason='no progress', last_iter=it, global_best_sol=self.global_best_sol, time_elapsed=self.time_elapsed)
                 return return_dict
 
     def save_search_results(self):

@@ -41,7 +41,7 @@ class RuleBasedTree:
             return 'I2'
 
 
-def train_RBTree(problem_name=None, save=True):
+def train_RBTree(problem_name=None, save=True, ret=False):
     load_path = '/home/kemal/Programming/Python/Articulation/data/progressive/articulated_data/'
     save_path = '/home/kemal/Programming/Python/Articulation/data/progressive/RBTrees/'
 
@@ -50,18 +50,21 @@ def train_RBTree(problem_name=None, save=True):
     df = pd.read_csv(file_name)
     f1 = df.f1.values.copy()
     f2 = df.f2.values.copy()
-    print(f1)
-    print(f2)
+    limits = df.limits.values.copy()
     tree = RuleBasedTree(f1, f2)
-
     if save is True:
         save_name = save_path + problem_name + '_rbtree.pickle'
         with open(save_name, 'wb') as f:
             pickle.dump(tree, f, pickle.HIGHEST_PROTOCOL)
 
+    if ret is True:
+        # returns f1 and f2 as dictionaries with keys defined by limits
+        f1 = dict(zip(limits, f1))
+        f2 = dict(zip(limits, f2))
+        return tree, f1, f2
 
 
 if __name__ == '__main__':
-    train_RBTree('BK1', save=True)
+    train_RBTree('BK1', save=False, ret=False)
 
 
