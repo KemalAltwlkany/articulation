@@ -220,6 +220,7 @@ class IntelligentDM:
         previous_sol_class = None
         class_of_curr_result = None
         self.aspirations = [self.f1['A'], self.f2['A']]
+        no_progress_iters = 0
         while 1:
             self.search_params['dynamic_constraints'] = self.dynamic_constraints
             self.search_params['aspirations'] = copy.deepcopy(self.aspirations)
@@ -248,11 +249,17 @@ class IntelligentDM:
             # Update global best solution found
             if self.global_best_sol is None:
                 self.global_best_sol = copy.deepcopy(results['global_best_sol'])
+                no_progress_iters = 0
             elif self.global_best_sol.get_val() > results['global_best_sol'].get_val():
                 self.global_best_sol = copy.deepcopy(results['global_best_sol'])
+                no_progress_iters = 0
             elif class_of_curr_result == 'G' and previous_sol_class == 'G':
-                self.termination_reason = 'No improvement while in class G for two iters.'
-                break
+                # Update 14.08.2020. - instead of having to wait for two iters, the algorithm must now
+                # be in class G for three iters without improving
+                no_progress_iters += 1
+                if no_progress_iters >= 2:
+                    self.termination_reason = 'No improvement while in class G for 3 iters.'
+                    break
 
             if it > self.n_repetitions:
                 self.termination_reason = 'Maximum iters exceeded.'
@@ -301,9 +308,9 @@ class ProgressiveMinMaxProgramming(TabuSearch):
         :param sol:
         :return:
         """
-        sol.set_val(np.max(np.subtract(sol.get_y(), self.aspirations)) + self.penalty(sol) + self.dynamic_penatly(sol))
+        sol.set_val(np.max(np.subtract(sol.get_y(), self.aspirations)) + self.penalty(sol) + self.dynamic_penalty(sol))
 
-    def dynamic_penatly(self, sol):
+    def dynamic_penalty(self, sol):
         penalty = 0
         for dynConstr in self.dynamic_constraints:
             penalty += dynConstr(sol.get_y())

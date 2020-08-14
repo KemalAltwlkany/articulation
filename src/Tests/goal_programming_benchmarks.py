@@ -90,7 +90,7 @@ def apriori_TNK(n_tests=20):
     aspirations = [[1, 0], [0.75, 0.25], [0.5, 0.5], [0.25, 0.75], [0, 1]]
     # This means that every group of 20 consecutive tests should have the same aspiration level.
     params = dict(
-        init_sol=Solution(np.array([2, 2])), # unknown whether this solution is feasible.
+        init_sol=Solution(np.array([2, 2])),  # unknown whether this solution is feasible.
         problem=MOO_Problem.TNK,
         constraints=[MOO_Constraints.TNK_constraint_1, MOO_Constraints.TNK_constraint_2, MOO_Constraints.TNK_constraint_3],
         step_size=0.05,

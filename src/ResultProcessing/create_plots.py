@@ -150,6 +150,9 @@ if __name__ == '__main__':
     # PROGRESSIVE TESTS
     #create_plots('progressive', 'BK1')
     #create_plots('progressive', 'IM1')
-    create_plots('progressive', 'SCH1')
+    #create_plots('progressive', 'SCH1')
+    #create_plots('progressive', 'FON')
+    #create_plots('progressive', 'TNK')
+    create_plots('progressive', 'OSY')
 
     #print('Not active.')
