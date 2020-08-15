@@ -99,7 +99,7 @@ def precompute_OSY_space_and_front(n_samples=100, n_samples_Pareto=100, save=Tru
     x2_help = (np.linspace(4.056, 5, n*2) - 2)/3
     x2_help2 = 2 - np.linspace(0, 1, n*2)
     x2 = np.concatenate((np.ones(n*2), x2_help, 2*np.ones(n), x2_help2))
-    x3 = np.concatenate((np.linspace(1, 5, n), np.linspace(1, 5, n), np.ones(n*2), np.linspace(1, 3.732, n), np.ones(n*2)))
+    x3 = np.concatenate((np.linspace(5, 1, n), np.linspace(1, 5, n), np.ones(n*2), np.linspace(1, 3.732, n), np.ones(n*2)))
     x4 = np.zeros(n*7)
     x5 = np.concatenate((5*np.ones(n), np.ones(n*6)))
     x6 = np.zeros(n*7)
@@ -114,7 +114,6 @@ def precompute_OSY_space_and_front(n_samples=100, n_samples_Pareto=100, save=Tru
     save_data['pareto_f2'] = copy.deepcopy(f2)
 
     x = np.column_stack((x1, x2, x3, x4, x5, x6))
-
     if show is True:
         fig.show()
     if save is True:
@@ -296,7 +295,7 @@ def precompute_IM1_objective_space(n_samples=100, n_samples_Pareto=100, save=Tru
     x1 = np.reshape(x1, x1.size)
     x2 = np.reshape(x2, x2.size)
     x = np.column_stack((x1, x2))
-    save_data['x'] = copy.deepcopy(x)
+    save_data['x'] = x
     fig2 = go.Figure()
     fig2.add_trace(
         go.Scatter(name='Pareto set', x=x[:, 0], y=x[:, 1], mode='markers', marker=dict(color='red'), marker_size=5)
@@ -420,7 +419,7 @@ if __name__ == '__main__':
 
     #precompute_FON_objective_space(n_samples=100, n_samples_Pareto=100, show=True)  # pareto samples 100 for tests, 1000 for perf. measures!
 
-    precompute_TNK_space_and_front(n_samples=200, n_samples_Pareto=2000, show=True)  # pareto samples 2000 for tests, 
-    #precompute_OSY_space_and_front(show=True)
-    #print('Not active.')
+    #precompute_TNK_space_and_front(n_samples=200, n_samples_Pareto=2000, show=True)  # pareto samples 1000 for tests, 2000 for perf. measures!
+    precompute_OSY_space_and_front(show=True)
+    print('Not active.')
 
