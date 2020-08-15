@@ -56,61 +56,64 @@ def precompute_OSY_space_and_front(n_samples=100, n_samples_Pareto=100, save=Tru
     # "K. Deb, A. Pratap, T. Meyarivan - Constrained Test Problems for Multi-objective Evolutionary Optimization"
 
     # region AB
-    x1, x2, x5 = 5, 1, 5
-    x3_space = np.linspace(1, 5, n_samples_Pareto)
-    for x3 in x3_space:
-        f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
-        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
-
-    # region BC
-    x1, x2, x5 = 5, 1, 1
-    x3_space = np.linspace(1, 5, n_samples_Pareto)
-    for x3 in x3_space:
-        f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
-        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
-
-    # region CD
-    x1_space = np.linspace(4.056, 5, n_samples_Pareto)
-    x3, x5 = 1, 1
-    for x1 in x1_space:
-        x2 = (x1 - 2.) / 3.
-        f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
-        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
-
-    # region DE
-    x1, x2, x5 = 0, 2, 1
-    x3_space = np.linspace(1, 3.732, n_samples_Pareto)
-    for x3 in x3_space:
-        f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
-        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
-
-    # region EF
-    x1_space = np.linspace(0, 1, n_samples_Pareto)
-    x3, x5 = 1, 1
-    for x1 in x1_space:
-        x2 = 2 - x1
-        f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
-        f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
+    # x1, x2, x5 = 5, 1, 5
+    # x3_space = np.linspace(1, 5, n_samples_Pareto)
+    # for x3 in x3_space:
+    #     f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
+    #     f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
+    #
+    # # region BC
+    # x1, x2, x5 = 5, 1, 1
+    # x3_space = np.linspace(1, 5, n_samples_Pareto)
+    # for x3 in x3_space:
+    #     f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
+    #     f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
+    #
+    # # region CD
+    # x1_space = np.linspace(4.056, 5, n_samples_Pareto)
+    # x3, x5 = 1, 1
+    # for x1 in x1_space:
+    #     x2 = (x1 - 2.) / 3.
+    #     f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
+    #     f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
+    #
+    # # region DE
+    # x1, x2, x5 = 0, 2, 1
+    # x3_space = np.linspace(1, 3.732, n_samples_Pareto)
+    # for x3 in x3_space:
+    #     f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
+    #     f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
+    #
+    # # region EF
+    # x1_space = np.linspace(0, 1, n_samples_Pareto)
+    # x3, x5 = 1, 1
+    # for x1 in x1_space:
+    #     x2 = 2 - x1
+    #     f1.append(-25 * math.pow(x1 - 2, 2) - math.pow(x2 - 2, 2) - math.pow(x3 - 1, 2) - 16 - math.pow(x5 - 1, 2))
+    #     f2.append(x1 ** 2 + x2 ** 2 + x3 ** 2 + x5 ** 2)
 
     # Update 15.08.2020.
     # Construct Pareto set
     n = n_samples_Pareto
-    x1 = np.concatenate((5*np.ones(n*2), np.linspace(4.056, 5, n), np.zeros(n), np.linspace(0, 1, n)))
-    x2_help = np.linspace(2.056, 3, n)/3
-    x2 = np.concatenate((np.ones(n*2), x2_help, 2*np.ones(n), np.linspace(-2, -1, n)))
-    x3 = np.concatenate((np.linspace(1, 5, n*2), np.ones(n), np.linspace(1, 3.732, n), np.ones(n)))
-    x4 = np.zeros(n*5)
-    x5 = np.concatenate((5*np.ones(n), np.ones(n*4)))
-    x6 = np.zeros(n*5)
+    x1 = np.concatenate((5*np.ones(n*2), np.linspace(4.056, 5, n*2), np.zeros(n), np.linspace(0, 1, n*2)))
+    x2_help = (np.linspace(4.056, 5, n*2) - 2)/3
+    x2_help2 = 2 - np.linspace(0, 1, n*2)
+    x2 = np.concatenate((np.ones(n*2), x2_help, 2*np.ones(n), x2_help2))
+    x3 = np.concatenate((np.linspace(1, 5, n), np.linspace(1, 5, n), np.ones(n*2), np.linspace(1, 3.732, n), np.ones(n*2)))
+    x4 = np.zeros(n*7)
+    x5 = np.concatenate((5*np.ones(n), np.ones(n*6)))
+    x6 = np.zeros(n*7)
 
 
-    f1 = np.sum()
-
+    f1 = -(25*np.square(x1 - 2) + np.square(x2 - 2) + np.square(x3 - 1) + np.square(x4 - 4) + np.square(x5 - 1))
+    f2 = np.square(x1) + np.square(x2) + np.square(x3) + np.square(x5)
     fig.add_trace(
             go.Scatter(name='Pareto front', x=f1, y=f2, mode='markers', marker=dict(color='blue'), marker_size=5))
 
     save_data['pareto_f1'] = copy.deepcopy(f1)
     save_data['pareto_f2'] = copy.deepcopy(f2)
+
+    x = np.column_stack((x1, x2, x3, x4, x5, x6))
 
     if show is True:
         fig.show()
@@ -414,8 +417,10 @@ if __name__ == '__main__':
     #precompute_BK1_objective_space(n_samples_Pareto=1000, show=True)
     #precompute_IM1_objective_space(n_samples_Pareto=1000, show=True)
     #precompute_SCH1_objective_space(n_samples_Pareto=1000, show=True)
-    #precompute_FON_objective_space(n_samples=100, n_samples_Pareto=1000, show=True)
-    #precompute_TNK_space_and_front(n_samples=200, n_samples_Pareto=2000, show=True)
-    precompute_OSY_space_and_front(show=True)
+
+    #precompute_FON_objective_space(n_samples=100, n_samples_Pareto=100, show=True)  # pareto samples 100 for tests, 1000 for perf. measures!
+
+    precompute_TNK_space_and_front(n_samples=200, n_samples_Pareto=2000, show=True)  # pareto samples 2000 for tests, 
+    #precompute_OSY_space_and_front(show=True)
     #print('Not active.')
 
