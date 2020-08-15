@@ -1,5 +1,9 @@
 import numpy as np
-n_tests = 20
-fifth = n_tests//5
-which_asp = np.concatenate((np.array([0] * fifth), np.array([1] * fifth), np.array([2] * fifth), np.array([3] * fifth), np.array([4] * fifth)))
-print(which_asp)
+x1 = np.linspace(0, 5, 5)
+x2 = np.linspace(0, 5, 5)
+x3 = np.linspace(0, 1, 25)
+x1, x2 = np.meshgrid(x1, x2)
+x1 = np.reshape(x1, x1.size)
+x2 = np.reshape(x2, x2.size)
+v = np.column_stack((x1, x2, x3))
+print(v)
