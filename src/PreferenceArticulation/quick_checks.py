@@ -1,13 +1,16 @@
 import numpy as np
 
+x = np.array([1, 2, 3])
+y = np.array([3, 3, 3])
+print(np.divide(x, y))
 
 # SPACING
-x = np.array([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]])
-y = np.array([1, 1])
-x_masked = np.ma.masked_array(x, mask=False)
-for i in range(len(x)):
-    print(np.sum(np.abs(x - x[i]), axis=1))
-    print(np.sum(np.abs(np.subtract(x, x[i]))))
+# x = np.array([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]])
+# y = np.array([1, 1])
+# x_masked = np.ma.masked_array(x, mask=False)
+# for i in range(len(x)):
+#     print(np.sum(np.abs(x - x[i]), axis=1))
+#     print(np.sum(np.abs(np.subtract(x, x[i]))))
 #
 #
 # print('---------------------------')
