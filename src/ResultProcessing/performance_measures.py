@@ -57,7 +57,7 @@ def compute_generational_distance(runtimes, alternatives, objectives, data):
     GD = np.sqrt(np.sum(np.square(distances))) / len(objectives)
     return [GD, np.average(distances), np.min(distances), np.max(distances), np.median(distances), np.std(distances)]
 
-def compute_spacing(runtimes, alternatives, objectives, data):
+def compute_spacing(runtimes, alternatives, objectives, data, visualize=False):
     """
     Calculates the spacing in the "generation". The generation is defined as the set of all Pareto optimal solutions found,
     i.e. the set of all solutions from every test run. Spacing is practically the standard deviation of the obtained Pareto front.
@@ -82,6 +82,25 @@ def compute_spacing(runtimes, alternatives, objectives, data):
     # kept for illustration purposes, since spacing is literally the standard deviation of the distances.
     # d_ = np.average(distances)
     # spacing = np.sqrt(np.sum(np.square(distances - d_))/len(distances))
+
+    # Visualization part
+    if visualize is True:
+        # plot the precomputed data
+        fig = go.Figure()
+        fig.add_trace(
+            go.Scatter(name='K samples of PF', x=x[:, 0], y=x[:, 1], mode='markers',
+                       marker=dict(color='red'), marker_size=5))
+
+
+        fig.update_layout(title={
+            'text': str('<b>' + 'Spacing measure' + '</b>'),
+            'y': 0.9,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'},
+            xaxis_title='f1', yaxis_title='f2', legend_title='<b>Legend:</b>')
+        fig.show()
+
     return [np.average(distances), np.min(distances), np.max(distances), np.median(distances), np.std(distances)]
 
 def compute_spread(runtimes, alternatives, objectives, data):
@@ -133,7 +152,7 @@ def compute_spread(runtimes, alternatives, objectives, data):
             np.average(d1_distances), np.max(d1_distances), np.median(d1_distances), np.std(d1_distances),
             np.average(d2_distances), np.max(d2_distances), np.median(d2_distances), np.std(d2_distances)]
 
-def compute_chi_square_like(runtime, alternatives, objectives, data, visualize=True):
+def compute_chi_square_like(runtime, alternatives, objectives, data, visualize=False):
     """
     Computes the Chi-square-like deviation measure as per Deb. Two parameters need to be selected in order to compute this
     PM. These are:
@@ -213,7 +232,6 @@ def compute_chi_square_like(runtime, alternatives, objectives, data, visualize=T
         fig.show()
     return [CSLDM, n_i[0], sigma_i, sigma_K_1]
 
-
 def compute_performance_measures(articulation_type=None, problem_name=None, which_PM=None, save=False):
     function_mapping = dict(
         runtime=compute_runtime,
@@ -252,17 +270,18 @@ def compute_performance_measures(articulation_type=None, problem_name=None, whic
     for PM in perf_measures:
         df_filename = '/home/kemal/Programming/Python/Articulation/data/performance_measures/PM_' + PM + '.csv'
         df = pd.read_csv(df_filename, index_col='entry')  # open appropriate .csv file
-        #df.loc[len(df.index)] = [articulation_type, problem_name] + function_mapping[PM](runtimes, alternatives, objectives, data)  # compute appropriate performance measure
-        print(function_mapping[PM](runtimes, alternatives, objectives, data))
+        df.loc[len(df.index)] = [articulation_type, problem_name, len(runtimes)] + function_mapping[PM](runtimes, alternatives, objectives, data)  # compute appropriate performance measure
+        #print(function_mapping[PM](runtimes, alternatives, objectives, data))
         df.to_csv(df_filename)
 
 
 
 if __name__ == '__main__':
-    #for art_type in ['aposteriori', 'apriori', 'progressive']:
-    #for prob_name in ['BK1', 'IM1', 'SCH1', 'FON', 'TNK', 'OSY']:
-    #    compute_performance_measures(articulation_type='apriori', problem_name=prob_name, which_PM='spread')
-    compute_performance_measures(articulation_type='apriori', problem_name='BK1', which_PM='chi_square')
+    for art_type in ['aposteriori', 'apriori', 'progressive']:
+        #for prob_name in ['BK1', 'IM1', 'SCH1', 'FON', 'TNK', 'OSY']:
+        for PM in ['runtime', 'euclidean_distance', 'generational_distance', 'spacing', 'spread', 'chi_square']:
+            compute_performance_measures(articulation_type=art_type, problem_name='IM1', which_PM=PM)
+    #compute_performance_measures(articulation_type='apriori', problem_name='BK1', which_PM='spacing')
     #chi_square_like(1, 2, 3, 4, 5)
-    print('Not active.')
+    #print('Not active.')
 

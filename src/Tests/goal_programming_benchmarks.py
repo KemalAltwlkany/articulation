@@ -285,12 +285,12 @@ def apriori_BK1(n_tests=20):
 
 
 if __name__ == '__main__':
-    #apriori_BK1(n_tests=100)
-    #apriori_IM1(n_tests=100)
+    #apriori_BK1(n_tests=200)
+    apriori_IM1(n_tests=200)
     #apriori_SCH1(n_tests=100)
     #apriori_FON(n_tests=100, n_dims=5)
     #apriori_TNK(n_tests=10)
-    apriori_OSY(n_tests=100)
+    #apriori_OSY(n_tests=100)
 
 
 
