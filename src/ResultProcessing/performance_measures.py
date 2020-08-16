@@ -3,14 +3,13 @@ import pickle as pickle
 import copy as copy
 import pandas as pd
 import numpy as np
+import plotly.graph_objects as go
 
-
-def compute_runtime(runtimes, alternatives, objectives, data, prob=None):
+def compute_runtime(runtimes, alternatives, objectives, data):
     """
     Function computes average, min, max, median and std of runtimes.
     Does not modify runtimes.
     Other function arguments are kept only to ease out the coding, they are never used.
-    :param prob: Not used.
     :param runtimes: list of runtimes per test run.
     :param alternatives: Not used.
     :param objectives: Not used.
@@ -19,11 +18,10 @@ def compute_runtime(runtimes, alternatives, objectives, data, prob=None):
     """
     return [np.average(runtimes), np.min(runtimes), np.max(runtimes), np.median(runtimes), np.std(runtimes)]
 
-def compute_euclidean_distance(runtimes, alternatives, objectives, data, prob=None):
+def compute_euclidean_distance(runtimes, alternatives, objectives, data):
     """
     Function computes the Euclidean distance between every optimum found (alternatives) and its nearest neighbor from
     the Pareto set. Returns the avg, min, max, median and std of the Euclidean distance.
-    :param prob: Not used.
     :param runtimes: Not used.
     :param alternatives: <list> of alternatives found per test run.
     :param objectives: Not used.
@@ -37,11 +35,10 @@ def compute_euclidean_distance(runtimes, alternatives, objectives, data, prob=No
             print('ERROR - A DISTANCE IS NEGATIVE!')
     return [np.average(distances), np.min(distances), np.max(distances), np.median(distances), np.std(distances)]
 
-def compute_generational_distance(runtimes, alternatives, objectives, data, prob=None):
+def compute_generational_distance(runtimes, alternatives, objectives, data):
     """
     Computes the generational distance. This is a scalar performance measure, which is computed along all the
     solutions found.
-    :param prob: Not used.
     :param runtimes: Not used.
     :param alternatives: Not used.
     :param objectives: <list> of <np.array> containing (f1, f2) for every optimum found.
@@ -60,11 +57,10 @@ def compute_generational_distance(runtimes, alternatives, objectives, data, prob
     GD = np.sqrt(np.sum(np.square(distances))) / len(objectives)
     return [GD, np.average(distances), np.min(distances), np.max(distances), np.median(distances), np.std(distances)]
 
-def compute_spacing(runtimes, alternatives, objectives, data, prob=None):
+def compute_spacing(runtimes, alternatives, objectives, data):
     """
     Calculates the spacing in the "generation". The generation is defined as the set of all Pareto optimal solutions found,
     i.e. the set of all solutions from every test run. Spacing is practically the standard deviation of the obtained Pareto front.
-    :param prob: Not used
     :param runtimes: Not used.
     :param alternatives: Not used.
     :param objectives: <list> of <np.array> containing (f1, f2) for every optimum found.
@@ -88,11 +84,10 @@ def compute_spacing(runtimes, alternatives, objectives, data, prob=None):
     # spacing = np.sqrt(np.sum(np.square(distances - d_))/len(distances))
     return [np.average(distances), np.min(distances), np.max(distances), np.median(distances), np.std(distances)]
 
-def compute_spread(runtimes, alternatives, objectives, data, prob=None):
+def compute_spread(runtimes, alternatives, objectives, data):
     """
     This metric requires the knowledge of the extremal Pareto front points for every test problem. These are shown
     in the comment bellow, but are basically the first and last values of the data['pareto_f1'] and data['pareto_f2'] dict.
-    :param prob: Not used.
     :param runtimes: Not used.
     :param alternatives: Not used.
     :param objectives: <list> of <np.array> containing (f1, f2) for every optimum found.
@@ -138,7 +133,7 @@ def compute_spread(runtimes, alternatives, objectives, data, prob=None):
             np.average(d1_distances), np.max(d1_distances), np.median(d1_distances), np.std(d1_distances),
             np.average(d2_distances), np.max(d2_distances), np.median(d2_distances), np.std(d2_distances)]
 
-def compute_chi_square_like(runtime, alternatives, objectives, data, prob='BK1'):
+def compute_chi_square_like(runtime, alternatives, objectives, data, visualize=True):
     """
     Computes the Chi-square-like deviation measure as per Deb. Two parameters need to be selected in order to compute this
     PM. These are:
@@ -146,59 +141,32 @@ def compute_chi_square_like(runtime, alternatives, objectives, data, prob='BK1')
     levels, specified by the DM
     2.) eps - defines the niche of every of those K samples.
     These parameters are hardcoded into a dictionary, as the test problems are fixed, so it is logical to fix them as well.
+    :param visualize:
     :param runtime: Not used.
     :param alternatives: Not used.
     :param objectives: <list> of <np.array> containing (f1, f2) for every optimum found.
     :param data: <dict> loaded from the precomputed files. Contains <np.array> of Pareto front under keys 'pareto_f1' and 'pareto_f2'
-    :param prob: Problem name must be passed as well, in order to index the dictionaries containing the K points and eps.
     :return:
     """
     # The number of points for which the Chi-squared-like deviation measure is computed
     # is set to 5. These 5 points correspond to the aspiration levels (goals)
     # set in a priori and progressive articulation.
+
     objs = np.array(objectives)
-    print('First two-three objectives')
-    print(objs[0:3])
     # Take 5 uniformly sampled points from the Pareto front
-    print(data['pareto_f1'][0:2])
-    print(type(data['pareto_f1']))
-    print(np.array([data['pareto_f1'][-1]]))
     f1_samps = np.concatenate((data['pareto_f1'][::len(data['pareto_f1'])//4], np.array([data['pareto_f1'][-1]])))
     f2_samps = np.concatenate((data['pareto_f2'][::len(data['pareto_f2'])//4], np.array([data['pareto_f2'][-1]])))
     five_points = np.stack((f1_samps, f2_samps), axis=1)
-    print(five_points)
-    print('Epsilon part: ')
     # Need to find optimal parameter eps, by computing distances between each of the five points and its nearest neighbor
     # eps will be the average distance of all distances between closest neighbors
     inds = np.array([True] * len(five_points))
     dists = -1 * np.ones(len(five_points))
     for i in range(len(five_points)):
         inds[i] = False
-        print(np.sqrt(np.sum(np.square(five_points[i] - five_points[inds]), axis=1)))
         dists[i] = np.min(np.sqrt(np.sum(np.square(five_points[i] - five_points[inds]), axis=1)))
         inds[i] = True
-    print(dists)
-    print(np.average(dists))
+    eps = np.min(dists)
 
-    #FON_help = [0.9457533241109305, 0.8399240327613827, 0.6321205588285577, 0.34156746712171393, 0.08220978425157577]
-    #FON_help2 = [[FON_help[i], FON_help[-i-1]] for i in range(5)]
-    #five_points = dict(
-    #    BK1=np.array([[0, 50], [15, 35], [25, 25], [35, 15], [50, 0]]),
-    #    IM1=np.array([[4, 1], [3.5, 1.9375], [3, 2.75], [2.5, 3.4375], [2, 4]]),
-    #    SCH1=np.array([[0, 4], [0.25, 0.25], [1, 1], [2.25, 0.25], [4, 0]]),
-    #    FON=np.array(FON_help2),
-    #    TNK=np.array([[1, 0], [0.75, 0.25], [0.5, 0.5], [0.25, 0.75], [0, 1]]),
-    #    OSY=np.array([[-50, 25], [-100, 50], [-175, 75], [-200, 50], [-250, 100]])
-    #)
-
-    eps_vals = dict(
-        BK1=5,
-        IM1=0.3,
-        SCH1=0.4,
-        FON=0.095,
-        TNK=0.1,
-        OSY=15
-    )
 
     # parameter names and labels are denoted with respect to my master thesis
     q = len(objs)
@@ -213,14 +181,37 @@ def compute_chi_square_like(runtime, alternatives, objectives, data, prob='BK1')
     x = np.array(five_points)
     for i in range(len(x)):
         distances = np.sqrt(np.sum(np.square(objs - x[i]), axis=1))
-        indices = distances < eps_vals[prob]
+        indices = distances < eps
         n_calc[i] = np.count_nonzero(indices)
         objs[indices] = np.array([[500, 500]])
     if np.sum(n_calc) > q:
         print('ERROR! ALGORITHM ESTIMATED TWO SOLS IN NICHE OF DIFFERENT FRONT SAMPLES!')
     n_calc[-1] = q - np.sum(n_calc)
-
+    print('Computed: ', n_calc)
+    print('Expected: ', n_i)
     CSLDM = np.sqrt(np.sum(np.divide(np.square(n_calc - n_i), sigma)))
+
+    # Visualization part
+    if visualize is True:
+        # plot the precomputed data
+        fig = go.Figure()
+        fig.add_trace(
+            go.Scatter(name='K samples of PF', x=five_points[:, 0], y=five_points[:, 1], opacity=0.5, mode='markers',
+                       marker=dict(color='red'), marker_size=20))
+        objs_plot = np.array(objectives)
+        fig.add_trace(
+            go.Scatter(name='Obtained solutions', x=objs_plot[:, 0], y=objs_plot[:, 1], opacity=0.5, mode='markers',
+                       marker=dict(color='blue'), marker_size=10))
+
+        fig.update_layout(title={
+            'text': str('<b>' + 'Chi-square-like deviation measure' + '</b>'),
+            'y': 0.9,
+            'x': 0.5,
+            'xanchor': 'center',
+            'yanchor': 'top'},
+            xaxis_title='f1', yaxis_title='f2', legend_title='<b>Legend:</b>')
+        fig.show()
+    return [CSLDM, n_i[0], sigma_i, sigma_K_1]
 
 
 def compute_performance_measures(articulation_type=None, problem_name=None, which_PM=None, save=False):
