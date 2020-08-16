@@ -1,8 +1,19 @@
 import numpy as np
 
-x = np.array([1, 2, 3])
-y = np.array([3, 3, 3])
-print(np.divide(x, y))
+x = np.array([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]])
+inds = np.array([True]*len(x))
+print(x[inds])
+dists = -1*np.ones(len(x))
+for i in range(len(x)):
+    inds[i] = False
+    print(np.sqrt(np.sum(np.square(x[i] - x[inds]), axis=1)))
+    dists[i] = np.min(np.sqrt(np.sum(np.square(x[i] - x[inds]), axis=1)))
+    inds[i] = True
+print(dists)
+print(np.max(dists))
+
+x = np.arange(100)
+print(type(x[::len(x)//4]))
 
 # SPACING
 # x = np.array([[1, 1], [2, 2], [3, 3], [4, 4], [5, 5]])

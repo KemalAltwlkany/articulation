@@ -138,7 +138,7 @@ def compute_spread(runtimes, alternatives, objectives, data, prob=None):
             np.average(d1_distances), np.max(d1_distances), np.median(d1_distances), np.std(d1_distances),
             np.average(d2_distances), np.max(d2_distances), np.median(d2_distances), np.std(d2_distances)]
 
-def chi_square_like(runtime, alternatives, objectives, data, prob):
+def compute_chi_square_like(runtime, alternatives, objectives, data, prob='BK1'):
     """
     Computes the Chi-square-like deviation measure as per Deb. Two parameters need to be selected in order to compute this
     PM. These are:
@@ -149,16 +149,36 @@ def chi_square_like(runtime, alternatives, objectives, data, prob):
     :param runtime: Not used.
     :param alternatives: Not used.
     :param objectives: <list> of <np.array> containing (f1, f2) for every optimum found.
-    :param data: Not used.
+    :param data: <dict> loaded from the precomputed files. Contains <np.array> of Pareto front under keys 'pareto_f1' and 'pareto_f2'
     :param prob: Problem name must be passed as well, in order to index the dictionaries containing the K points and eps.
     :return:
     """
     # The number of points for which the Chi-squared-like deviation measure is computed
     # is set to 5. These 5 points correspond to the aspiration levels (goals)
     # set in a priori and progressive articulation.
-    objs = objectives.copy()
-
+    objs = np.array(objectives)
+    print('First two-three objectives')
+    print(objs[0:3])
     # Take 5 uniformly sampled points from the Pareto front
+    print(data['pareto_f1'][0:2])
+    print(type(data['pareto_f1']))
+    print(np.array([data['pareto_f1'][-1]]))
+    f1_samps = np.concatenate((data['pareto_f1'][::len(data['pareto_f1'])//4], np.array([data['pareto_f1'][-1]])))
+    f2_samps = np.concatenate((data['pareto_f2'][::len(data['pareto_f2'])//4], np.array([data['pareto_f2'][-1]])))
+    five_points = np.stack((f1_samps, f2_samps), axis=1)
+    print(five_points)
+    print('Epsilon part: ')
+    # Need to find optimal parameter eps, by computing distances between each of the five points and its nearest neighbor
+    # eps will be the average distance of all distances between closest neighbors
+    inds = np.array([True] * len(five_points))
+    dists = -1 * np.ones(len(five_points))
+    for i in range(len(five_points)):
+        inds[i] = False
+        print(np.sqrt(np.sum(np.square(five_points[i] - five_points[inds]), axis=1)))
+        dists[i] = np.min(np.sqrt(np.sum(np.square(five_points[i] - five_points[inds]), axis=1)))
+        inds[i] = True
+    print(dists)
+    print(np.average(dists))
 
     #FON_help = [0.9457533241109305, 0.8399240327613827, 0.6321205588285577, 0.34156746712171393, 0.08220978425157577]
     #FON_help2 = [[FON_help[i], FON_help[-i-1]] for i in range(5)]
@@ -182,7 +202,7 @@ def chi_square_like(runtime, alternatives, objectives, data, prob):
 
     # parameter names and labels are denoted with respect to my master thesis
     q = len(objs)
-    K = len(five_points[prob])
+    K = len(five_points)
     n_i = np.array([q/K]*K + [0])
     sigma_i = n_i[0] * (1.0 - n_i[0]/q)
     sigma_K_1 = q * (1.0 - 1.0/K)
@@ -190,7 +210,7 @@ def chi_square_like(runtime, alternatives, objectives, data, prob):
 
     # for each of the 5 pareto optimal pts, check which obtained solutions are in its niche
     n_calc = np.zeros(K + 1)
-    x = np.array(five_points[prob])
+    x = np.array(five_points)
     for i in range(len(x)):
         distances = np.sqrt(np.sum(np.square(objs - x[i]), axis=1))
         indices = distances < eps_vals[prob]
@@ -209,7 +229,8 @@ def compute_performance_measures(articulation_type=None, problem_name=None, whic
         euclidean_distance=compute_euclidean_distance,
         generational_distance=compute_generational_distance,
         spacing=compute_spacing,
-        spread=compute_spread
+        spread=compute_spread,
+        chi_square=compute_chi_square_like
     )
 
     load_path = '/home/kemal/Programming/Python/Articulation/data/pickles/' + articulation_type + '/' + problem_name + '/'
@@ -240,8 +261,8 @@ def compute_performance_measures(articulation_type=None, problem_name=None, whic
     for PM in perf_measures:
         df_filename = '/home/kemal/Programming/Python/Articulation/data/performance_measures/PM_' + PM + '.csv'
         df = pd.read_csv(df_filename, index_col='entry')  # open appropriate .csv file
-        df.loc[len(df.index)] = [articulation_type, problem_name] + function_mapping[PM](runtimes, alternatives, objectives, data)  # compute appropriate performance measure
-        #print(function_mapping[PM](runtimes, alternatives, objectives, data))
+        #df.loc[len(df.index)] = [articulation_type, problem_name] + function_mapping[PM](runtimes, alternatives, objectives, data)  # compute appropriate performance measure
+        print(function_mapping[PM](runtimes, alternatives, objectives, data))
         df.to_csv(df_filename)
 
 
@@ -250,7 +271,7 @@ if __name__ == '__main__':
     #for art_type in ['aposteriori', 'apriori', 'progressive']:
     #for prob_name in ['BK1', 'IM1', 'SCH1', 'FON', 'TNK', 'OSY']:
     #    compute_performance_measures(articulation_type='apriori', problem_name=prob_name, which_PM='spread')
-    #compute_performance_measures(articulation_type='apriori', problem_name='IM1', which_PM='spread')
+    compute_performance_measures(articulation_type='apriori', problem_name='BK1', which_PM='chi_square')
     #chi_square_like(1, 2, 3, 4, 5)
     print('Not active.')
 
