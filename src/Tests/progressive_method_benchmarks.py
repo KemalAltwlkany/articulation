@@ -329,10 +329,10 @@ def progressive_OSY(n_tests=20, n_repetitions=10):
 
 if __name__ == '__main__':
     #progressive_BK1(n_tests=200, n_repetitions=10)
-    progressive_IM1(n_tests=200, n_repetitions=10)
-    #progressive_SCH1(n_tests=10, n_repetitions=10)
-    #progressive_FON(n_tests=10, n_repetitions=10, n_dims=5)
-    #progressive_TNK(n_tests=10, n_repetitions=10)
-    #progressive_OSY(n_tests=10, n_repetitions=10)
+    #progressive_IM1(n_tests=200, n_repetitions=10)
+    #progressive_SCH1(n_tests=200, n_repetitions=10)
+    #progressive_FON(n_tests=200, n_repetitions=10, n_dims=5)
+    #progressive_TNK(n_tests=200, n_repetitions=10)
+    progressive_OSY(n_tests=200, n_repetitions=10)
 
 

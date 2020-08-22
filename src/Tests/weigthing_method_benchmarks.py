@@ -253,10 +253,10 @@ def aposteriori_BK1(n_tests=20):
 
 if __name__ == '__main__':
     #aposteriori_BK1(n_tests=200)
-    aposteriori_IM1(n_tests=200)
-    #aposteriori_SCH1(n_tests=100)
-    #aposteriori_FON(n_tests=100, n_dims=5)
-    #aposteriori_TNK(n_tests=100)
-    #aposteriori_OSY(n_tests=100)
+    #aposteriori_IM1(n_tests=200)
+    #aposteriori_SCH1(n_tests=200)
+    #aposteriori_FON(n_tests=200, n_dims=5)
+    #aposteriori_TNK(n_tests=200)
+    #aposteriori_OSY(n_tests=200)
     print('Not active.')
 

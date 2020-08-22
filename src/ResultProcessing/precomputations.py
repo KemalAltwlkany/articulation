@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 
 def precompute_OSY_space_and_front(n_samples=100, n_samples_Pareto=100, save=True, save_folder=None, save_name=None, show=False):
     if save_folder is None:
-        save_folder = '/home/kemal/Programming/Python/Articulation/data/precomputed_data/'
+        save_folder = '/home/kemal/Programming/Python/Articulation/data/handmade_plots/'
     if save_name is None:
         save_name = 'OSY_data.pickle'
 
@@ -114,8 +114,27 @@ def precompute_OSY_space_and_front(n_samples=100, n_samples_Pareto=100, save=Tru
     save_data['pareto_f2'] = copy.deepcopy(f2)
 
     x = np.column_stack((x1, x2, x3, x4, x5, x6))
+    save_data['x'] = copy.deepcopy(x)
+    fig.update_layout(
+        title=dict(
+            text='<b>OSY objective space:</b>',
+            y=0.93,
+            x=0.5,
+            xanchor='center',
+            yanchor='top'
+        ),
+        xaxis=dict(
+            title='<b>f1(x1, x2, x3, x4, x5, x6)</b>'
+        ),
+        yaxis=dict(
+            title='<b>f2(x1, x2, x3, x4, x5, x6)</b>'
+        ),
+        showlegend=False
+    )
     if show is True:
         fig.show()
+        fig.write_image(save_folder + 'OSY.png')
+
     if save is True:
         os.chdir(save_folder)
         with open(save_name, 'wb') as f:
@@ -123,7 +142,7 @@ def precompute_OSY_space_and_front(n_samples=100, n_samples_Pareto=100, save=Tru
 
 def precompute_TNK_space_and_front(n_samples=100, n_samples_Pareto=1000, save_folder=None, save_name=None, show=False):
     if save_folder is None:
-        save_folder = '/home/kemal/Programming/Python/Articulation/data/precomputed_data/'
+        save_folder = '/home/kemal/Programming/Python/Articulation/data/handmade_plots/'
     if save_name is None:
         save_name = 'TNK_data.pickle'
 
@@ -186,6 +205,24 @@ def precompute_TNK_space_and_front(n_samples=100, n_samples_Pareto=1000, save_fo
     fig.add_trace(go.Scatter(name='Pareto front', x=f1_pom, y=f2_pom, mode='markers', line=dict(color='blue', width=5)))
     save_data['pareto_f1'] = copy.deepcopy(f1_pom)
     save_data['pareto_f2'] = copy.deepcopy(f2_pom)
+
+    fig.update_layout(
+        title=dict(
+            text='<b>TNK objective space:</b>',
+            y=0.93,
+            x=0.5,
+            xanchor='center',
+            yanchor='top'
+        ),
+        xaxis=dict(
+            title='<b>f1 = x1</b>'
+        ),
+        yaxis=dict(
+            title='<b>f2 = x2</b>'
+        ),
+        showlegend=False
+    )
+
     # Update 15.08.2020.
     # Pareto set == Pareto front
     x = np.column_stack((np.array(f1_pom), np.array(f2_pom)))
@@ -196,10 +233,11 @@ def precompute_TNK_space_and_front(n_samples=100, n_samples_Pareto=1000, save_fo
 
     if show is True:
         fig.show()
+        fig.write_image(save_folder + 'TNK.png')
 
 def precompute_BK1_objective_space(n_samples=100, n_samples_Pareto=100, save=True, save_folder=None, save_name=None, show=False):
     if save_folder is None:
-        save_folder = '/home/kemal/Programming/Python/Articulation/data/precomputed_data/'
+        save_folder = '/home/kemal/Programming/Python/Articulation/data/handmade_plots/'
     if save_name is None:
         save_name = 'BK1_data.pickle'
 
@@ -244,6 +282,23 @@ def precompute_BK1_objective_space(n_samples=100, n_samples_Pareto=100, save=Tru
     fig2.add_trace(
         go.Scatter(name='Pareto set', x=x[:, 0], y=x[:, 1], mode='markers', marker=dict(color='red'), marker_size=5)
     )
+    fig.update_layout(
+        title=dict(
+            text='<b>BK1 objective space:</b>',
+            y=0.93,
+            x=0.5,
+            xanchor='center',
+            yanchor='top'
+        ),
+        xaxis=dict(
+            title='<b>f1(x1, x2)</b>'
+        ),
+        yaxis=dict(
+            title='<b>f2(x1, x2)</b>'
+        ),
+        showlegend=False
+    )
+
     if save is True:
         os.chdir(save_folder)
         with open(save_name, 'wb') as f:
@@ -251,11 +306,12 @@ def precompute_BK1_objective_space(n_samples=100, n_samples_Pareto=100, save=Tru
 
     if show is True:
         fig.show()
+        fig.write_image(save_folder + 'BK1.png')
         fig2.show()
 
 def precompute_IM1_objective_space(n_samples=100, n_samples_Pareto=100, save=True, save_folder=None, save_name=None, show=False):
     if save_folder is None:
-        save_folder = '/home/kemal/Programming/Python/Articulation/data/precomputed_data/'
+        save_folder = '/home/kemal/Programming/Python/Articulation/data/handmade_plots/'
     if save_name is None:
         save_name = 'IM1_data.pickle'
 
@@ -300,6 +356,24 @@ def precompute_IM1_objective_space(n_samples=100, n_samples_Pareto=100, save=Tru
     fig2.add_trace(
         go.Scatter(name='Pareto set', x=x[:, 0], y=x[:, 1], mode='markers', marker=dict(color='red'), marker_size=5)
     )
+
+    fig.update_layout(
+        title=dict(
+            text='<b>IM1 objective space:</b>',
+            y=0.93,
+            x=0.5,
+            xanchor='center',
+            yanchor='top'
+        ),
+        xaxis=dict(
+            title='<b>f1(x1, x2)</b>'
+        ),
+        yaxis=dict(
+            title='<b>f2(x1, x2)</b>'
+        ),
+        showlegend=False
+    )
+
     if save is True:
         os.chdir(save_folder)
         with open(save_name, 'wb') as f:
@@ -307,11 +381,12 @@ def precompute_IM1_objective_space(n_samples=100, n_samples_Pareto=100, save=Tru
 
     if show is True:
         fig.show()
+        fig.write_image(save_folder + 'IM1.png')
         fig2.show()
 
 def precompute_SCH1_objective_space(n_samples=100, n_samples_Pareto=100, save=True, save_folder=None, save_name=None, show=False):
     if save_folder is None:
-        save_folder = '/home/kemal/Programming/Python/Articulation/data/precomputed_data/'
+        save_folder = '/home/kemal/Programming/Python/Articulation/data/handmade_plots/'
     if save_name is None:
         save_name = 'SCH1_data.pickle'
 
@@ -349,6 +424,24 @@ def precompute_SCH1_objective_space(n_samples=100, n_samples_Pareto=100, save=Tr
         go.Scatter(name='Pareto set', x=x1, y=np.zeros(x1.size), mode='markers', marker=dict(color='red'), marker_size=5)
     )
 
+
+    fig.update_layout(
+        title=dict(
+            text='<b>SCH1 objective space:</b>',
+            y=0.93,
+            x=0.5,
+            xanchor='center',
+            yanchor='top'
+        ),
+        xaxis=dict(
+            title='<b>f1(x)</b>'
+        ),
+        yaxis=dict(
+            title='<b>f2(x)</b>'
+        ),
+        showlegend=False
+    )
+
     if save is True:
         os.chdir(save_folder)
         with open(save_name, 'wb') as f:
@@ -356,11 +449,12 @@ def precompute_SCH1_objective_space(n_samples=100, n_samples_Pareto=100, save=Tr
 
     if show is True:
         fig.show()
+        fig.write_image(save_folder + 'SCH1.png')
         fig2.show()
 
 def precompute_FON_objective_space(n_samples=10, n_samples_Pareto=10, save=True, save_folder=None, save_name=None, show=False):
     if save_folder is None:
-        save_folder = '/home/kemal/Programming/Python/Articulation/data/precomputed_data/'
+        save_folder = '/home/kemal/Programming/Python/Articulation/data/handmade_plots/'
     if save_name is None:
         save_name = 'FON_data.pickle'
 
@@ -396,8 +490,24 @@ def precompute_FON_objective_space(n_samples=10, n_samples_Pareto=10, save=True,
     sum2 = np.sum(np.square(a + 1. / math.sqrt(n)), axis=1)
     f1 = 1 - np.exp(-sum1)
     f2 = 1 - np.exp(-sum2)
+    fig.add_trace(go.Scatter(name='Pareto front', x=f1, y=f2, mode='lines', line=dict(color='blue', width=5)))
 
-    fig.add_trace(go.Scatter(name='Pareto front', x=f1, y=f2, mode='markers', line=dict(color='blue', width=5)))
+    fig.update_layout(
+        title=dict(
+            text='<b>FON objective space:</b>',
+            y=0.93,
+            x=0.5,
+            xanchor='center',
+            yanchor='top'
+        ),
+        xaxis=dict(
+            title='<b>f1(x1, x2, x3, x4, x5)</b>'
+        ),
+        yaxis=dict(
+            title='<b>f2(x1, x2, x3, x4, x5)</b>'
+        ),
+        showlegend=False
+    )
 
     save_data['pareto_f1'] = copy.deepcopy(f1)
     save_data['pareto_f2'] = copy.deepcopy(f2)
@@ -410,6 +520,7 @@ def precompute_FON_objective_space(n_samples=10, n_samples_Pareto=10, save=True,
 
     if show is True:
         fig.show()
+        fig.write_image(save_folder + 'FON.png')
 
 
 if __name__ == '__main__':
@@ -419,7 +530,7 @@ if __name__ == '__main__':
 
     #precompute_FON_objective_space(n_samples=100, n_samples_Pareto=100, show=True)  # pareto samples 100 for tests, 1000 for perf. measures!
 
-    #precompute_TNK_space_and_front(n_samples=200, n_samples_Pareto=2000, show=True)  # pareto samples 1000 for tests, 2000 for perf. measures!
-    precompute_OSY_space_and_front(show=True)
-    print('Not active.')
+    #precompute_TNK_space_and_front(n_samples=200, n_samples_Pareto=1000, show=True)  # pareto samples 1000 for tests, 2000 for perf. measures!
+    precompute_OSY_space_and_front(n_samples=400, n_samples_Pareto=1000, show=True)
+    #print('Not active.')
 

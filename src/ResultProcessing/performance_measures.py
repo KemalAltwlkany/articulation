@@ -30,6 +30,7 @@ def compute_euclidean_distance(runtimes, alternatives, objectives, data):
     """
     distances = -1*np.ones(len(alternatives))
     for i in range(len(alternatives)):
+        #distances[i] = np.min(np.abs(data['x'] - alternatives[i]))  # only for SCH1
         distances[i] = np.min(np.linalg.norm(data['x'] - alternatives[i], axis=1))
         if distances[i] < 0:
             print('ERROR - A DISTANCE IS NEGATIVE!')
@@ -175,7 +176,14 @@ def compute_chi_square_like(runtime, alternatives, objectives, data, visualize=F
     # Take 5 uniformly sampled points from the Pareto front
     f1_samps = np.concatenate((data['pareto_f1'][::len(data['pareto_f1'])//4], np.array([data['pareto_f1'][-1]])))
     f2_samps = np.concatenate((data['pareto_f2'][::len(data['pareto_f2'])//4], np.array([data['pareto_f2'][-1]])))
+
+    # ONLY FOR TNK
+    # f1_samps = np.delete(f1_samps, len(f1_samps)-1)
+    # f2_samps = np.delete(f2_samps, len(f2_samps)-1)
+
     five_points = np.stack((f1_samps, f2_samps), axis=1)
+
+    print(five_points)
     # Need to find optimal parameter eps, by computing distances between each of the five points and its nearest neighbor
     # eps will be the average distance of all distances between closest neighbors
     inds = np.array([True] * len(five_points))
@@ -272,7 +280,8 @@ def compute_performance_measures(articulation_type=None, problem_name=None, whic
         df = pd.read_csv(df_filename, index_col='entry')  # open appropriate .csv file
         df.loc[len(df.index)] = [articulation_type, problem_name, len(runtimes)] + function_mapping[PM](runtimes, alternatives, objectives, data)  # compute appropriate performance measure
         #print(function_mapping[PM](runtimes, alternatives, objectives, data))
-        df.to_csv(df_filename)
+        if save is True:
+            df.to_csv(df_filename)
 
 
 
@@ -280,8 +289,8 @@ if __name__ == '__main__':
     for art_type in ['aposteriori', 'apriori', 'progressive']:
         #for prob_name in ['BK1', 'IM1', 'SCH1', 'FON', 'TNK', 'OSY']:
         for PM in ['runtime', 'euclidean_distance', 'generational_distance', 'spacing', 'spread', 'chi_square']:
-            compute_performance_measures(articulation_type=art_type, problem_name='IM1', which_PM=PM)
-    #compute_performance_measures(articulation_type='apriori', problem_name='BK1', which_PM='spacing')
+            compute_performance_measures(articulation_type=art_type, problem_name='OSY', which_PM=PM, save=True)
+    #compute_performance_measures(articulation_type='aposteriori', problem_name='SCH1', which_PM='chi_square', save=False)
     #chi_square_like(1, 2, 3, 4, 5)
     #print('Not active.')
 

@@ -1,6 +1,7 @@
 import numpy as np
 import sys as sys
 import random as random
+import pickle as pickle
 
 sys.path.insert(0, "/home/kemal/Programming/Python/Articulation")
 from src.PreferenceArticulation.Solution import Solution
@@ -271,6 +272,12 @@ def apriori_BK1(n_tests=20):
     )
     fifth = n_tests//5
     which_asp = np.concatenate((np.array([0] * fifth), np.array([1] * fifth), np.array([2] * fifth), np.array([3] * fifth), np.array([4] * fifth)))
+    # # Update 18.08.2020.
+    # '/home/kemal/Programming/Python/Articulation/data/precomputed_data/')
+    # file = open('BK1_data.pickle', 'rb')
+    # data = pickle.load(file)
+    # file.close()
+
     for i in range(n_tests):
         save_options['filename'] = 'BK1_test_' + str(i+1) + '.pickle'
         params['save_options'] = save_options
@@ -279,6 +286,9 @@ def apriori_BK1(n_tests=20):
         random.seed(i)
         np.random.seed(i)
         params['aspirations'] = aspirations[which_asp[i] % 5]  # 5 different types of aspiration levels
+
+
+
         params['init_sol'] = Solution(np.array([random.uniform(-5, 10), random.uniform(-5, 10)]))
         SearchInstance = AprioriFuzzyGoalProgramming(**params)
         SearchInstance.search()
@@ -286,11 +296,11 @@ def apriori_BK1(n_tests=20):
 
 if __name__ == '__main__':
     #apriori_BK1(n_tests=200)
-    apriori_IM1(n_tests=200)
-    #apriori_SCH1(n_tests=100)
-    #apriori_FON(n_tests=100, n_dims=5)
-    #apriori_TNK(n_tests=10)
-    #apriori_OSY(n_tests=100)
+    #apriori_IM1(n_tests=200)
+    #apriori_SCH1(n_tests=200)
+    #apriori_FON(n_tests=200, n_dims=5)
+    #apriori_TNK(n_tests=200)
+    apriori_OSY(n_tests=200)
 
 
 

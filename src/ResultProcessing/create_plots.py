@@ -68,11 +68,6 @@ def plot_search_results(articulation_type, benchmark_problem, search_results, ti
     fig.add_trace(go.Scatter(name='Optimum', x=f1, y=f2, mode='markers', marker_symbol='star', marker_color='yellow',
                              marker_size=22))
 
-
-
-
-
-
     fig.update_layout(title={
         'text': str('<b>' + title + '</b>'),
         'y': 0.9,
@@ -132,8 +127,8 @@ def create_plots(articulation_type, benchmark_problem, extension='.png', n_sampl
 
 if __name__ == '__main__':
     # A POSTERIORI TESTS
-    # create_plots('aposteriori', 'BK1')
-    # create_plots('aposteriori', 'IM1')
+    #create_plots('aposteriori', 'BK1')
+    #create_plots('aposteriori', 'IM1')
     # create_plots('aposteriori', 'SCH1')
     # create_plots('aposteriori', 'FON')
     # create_plots('aposteriori', 'TNK')
@@ -144,7 +139,7 @@ if __name__ == '__main__':
     #create_plots('apriori', 'IM1')
     #create_plots('apriori', 'SCH1')
     #create_plots('apriori', 'FON')
-    #create_plots('apriori', 'TNK')
+    # create_plots('apriori', 'TNK')
     #create_plots('apriori', 'OSY')
 
     # PROGRESSIVE TESTS
@@ -152,7 +147,7 @@ if __name__ == '__main__':
     #create_plots('progressive', 'IM1')
     #create_plots('progressive', 'SCH1')
     #create_plots('progressive', 'FON')
-    #create_plots('progressive', 'TNK')
-    create_plots('progressive', 'OSY')
+    create_plots('progressive', 'TNK')
+    #create_plots('progressive', 'OSY')
 
     #print('Not active.')
